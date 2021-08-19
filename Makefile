@@ -43,8 +43,8 @@ depend: $(OBJECTS:.o=.c)
 
 test: $(APP) $(ARC)
 	./$(APP) -vec -ivec -fvec -tvec -map -tmap -smat -sw \
-		-pipe Makefile -fasta data/777.fa -gff data/777.gff\
-		-pwm data/donor.pwm -mm data/exon.mm -len data/intron.len
+		-pipe Makefile -fasta demo/777.fa -gff demo/777.gff\
+		-pwm demo/donor.pwm -mm demo/exon.mm -len demo/intron.len
 
 all: $(ARC) $(APP)
 	cd dusty && make
