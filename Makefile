@@ -1,6 +1,4 @@
-##############################
-# Makefile for the genomikon #
-##############################
+# Makefile for the genomikon
 
 LIB = -lm
 CFLAGS = -O2 -Wall -Werror
@@ -18,9 +16,7 @@ APP = testing
 SRC = testing.c
 OBJ = testing.o
 
-###########
-# Targets #
-###########
+# Targets
 
 default:
 	make $(ARC)
@@ -34,9 +30,7 @@ $(APP): $(OBJ) $(OBJECTS)
 
 clean:
 	rm -f *.o $(APP) $(ARC)
-	cd dusty && make clean
-	cd smithy && make clean
-	cd geney && make clean
+	cd demo && make clean
 
 depend: $(OBJECTS:.o=.c)
 	gcc -MM $^ > $@
@@ -47,19 +41,13 @@ test: $(APP) $(ARC)
 		-pwm demo/donor.pwm -mm demo/exon.mm -len demo/intron.len
 
 all: $(ARC) $(APP)
-	cd dusty && make
-	cd smithy && make
-	cd geney && make
+	cd demo && make
 
-###################
-# Inference Rules #
-###################
+# Inference Rules
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-################
-# Dependancies #
-################
+# Dependancies
 
 include depend
