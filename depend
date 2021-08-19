@@ -1,0 +1,5 @@
+align.o: align.c align.h toolbox.h
+feature.o: feature.c feature.h toolbox.h
+model.o: model.c model.h toolbox.h
+sequence.o: sequence.c sequence.h toolbox.h
+toolbox.o: toolbox.c toolbox.h
