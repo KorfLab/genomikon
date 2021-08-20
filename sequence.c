@@ -90,48 +90,53 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 
 	// check for fasta header
 	char c = fgetc(io->stream);
-	if (c == EOF) return NULL;
-	if (c != '>') gkn_exit("gkn_fasta: doesn't look like a fasta file");
+	if (c == EOF || c == 255) return NULL;
+	if (c != '>') gkn_exit("fasta? %c %d", c, (int)c);
 	ungetc(c, io->stream);
 
 	// def
-	size_t size = 256;
-	int i = 0;
-	char *def = gkn_malloc(size * sizeof(char));
-	while ((c = fgetc(io->stream)) != EOF) {
-		if (c == '\n') break;
-		def[i] = c;
-		i++;
-		if (i == size) {
-			size *= 2;
-			def = gkn_realloc(def, size);
-		}
-	}
-	def[i] = '\0';
+	char *def = gkn_readline(io);
 
 	// seq
-	size = 65536;
-	i = 0;
-	char *seq = gkn_malloc(size * sizeof(char));
-
-	while ((c = fgetc(io->stream)) != EOF) {
+	gkn_vec lines = gkn_vec_new();
+	while (1) {
+		char c = fgetc(io->stream);
+		if (c == EOF) break;
 		if (c == '>') {
 			ungetc(c, io->stream);
 			break;
 		}
-		if (isspace((int)c)) continue;
-		seq[i] = c;
-		i++;
-		if (i == size) {
-			size *= 2;
-			seq = gkn_realloc(seq, size);
-		}
+		char *line = gkn_readline(io);
+		if (line == NULL) break;
+		gkn_vec_push(lines, line);
 	}
-	seq[i] = '\0';
+	
+	int letters = 0;
+	for (int i = 0; i < lines->size; i++) {
+		char *line = lines->elem[i];
+		letters += strlen(line);
+	}
+	
+	char *seq = malloc(letters + 1);
+	int off = 0;
+	for (int i = 0; i < lines->size; i++) {
+		char *line = lines->elem[i];
+		strcpy(seq + off, line);
+		off += strlen(line);
+	}
+	
+	// clean up
+	for (int i = 0; i < lines->size; i++) {
+		free(lines->elem[i]);
+	}
+	gkn_vec_free(lines);
 
-	gkn_fasta ff = gkn_fasta_new(def+1, seq);
-	free(def);
-	free(seq);
+	// return object
+	gkn_fasta ff = malloc(sizeof(struct gkn_FASTA));
+	ff->def = def;
+	ff->seq = seq;
+	ff->length = 1; //strlen(seq);
+	
 	return ff;
 }
 
