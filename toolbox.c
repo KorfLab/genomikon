@@ -6,11 +6,10 @@
 #ifndef GENOMIKON_TOOLBOX_C
 #define GENOMIKON_TOOLBOX_C
 
-#include <limits.h>
 #include "toolbox.h"
 
-static char gkn_version_number[] = "2021";
-static char gkn_program_name[64] = "name not set";
+static char gkn_version_number[] = "genomikon-2021";
+static char gkn_program_name[256] = "name not set";
 
 char * gkn_get_version_number (void) {return gkn_version_number;}
 void   gkn_set_program_name (const char *s) {strcpy(gkn_program_name, s);}
@@ -465,6 +464,7 @@ char * gkn_readline(gkn_pipe io) {
 	int  read = 0;
 	while (fgets(line, sizeof(line), io->stream) != NULL) {
 		if (line[0] == '#') continue;
+		if (strlen(line) == 0) continue;
 		read = 1;
 		break;
 	}
@@ -477,7 +477,7 @@ char * gkn_readline(gkn_pipe io) {
 void gkn_exit(const char* format, ...) {
 	va_list args;
 	fflush(stdout);
-	fprintf(stderr, "ERROR from program %s, libarary version %s\n",
+	fprintf(stderr, "ERROR from program %s, libarary %s\n",
 		gkn_get_program_name(),
 		gkn_get_version_number());
 	va_start(args, format);

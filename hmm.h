@@ -6,26 +6,26 @@
 #ifndef GENOMIKON_HMM_H
 #define GENOMIKON_HMM_H
 
-#include "toolbox.h"
-#include "sequence.h"
 #include "model.h"
+#include "sequence.h"
+#include "toolbox.h"
 
 // HMM state
 
 struct gkn_STATE {
 	char   *name;
-	
+
 	// ends
 	double  init;  // initial probability
 	double  term;  // terminal probability
-	
+
 	// transitions
 	gkn_tvec adjs; // adjacent state
 	gkn_fvec adjp; // adjacent probability
-	
+
 	// emission model
 	gkn_mm emit;
-	
+
 	// length model
 	gkn_len len;
 };

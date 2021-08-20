@@ -4,8 +4,8 @@
 
 #include <stdio.h>
 
-#include "toolbox.h"
 #include "sequence.h"
+#include "toolbox.h"
 
 static double entropy(int a, int c, int g, int t) {
 	int total = a + c + g + t;
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
 
 	// main loop
 	gkn_pipe io = gkn_pipe_open(file, "r");
-	while ((in = gkn_fasta_read(io->stream)) != NULL) {
+	while ((in = gkn_fasta_read(io)) != NULL) {
 		char *mask = NULL;
 		switch (alg) {
 			case 1: mask = dust1(in, w, h, lc); break;

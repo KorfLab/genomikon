@@ -6,7 +6,6 @@
 #ifndef GENOMIKON_ALIGN_C
 #define GENOMIKON_ALIGN_C
 
-#include <limits.h>
 #include "align.h"
 
 // scoring matrices
@@ -109,21 +108,21 @@ gkn_smat gkn_smat_blosum(int n) {
 		case 80: strcpy(mat->name, "BLOSUM80"); break;
 		default: gkn_exit("invalid matrix number");
 	}
-	
+
 	// set gap
 	switch (n) {
 		case 40: mat->gap = -4;
 		case 62: mat->gap = -5;
 		case 80: mat->gap = -7;
 	}
-	
+
 	// clear out
 	for (int i = 0; i < 25; i++) {
 		for (int j = 0; j < 25; j++) {
 			mat->score[i][j] = INT_MIN;
 		}
 	}
-	
+
 	// transfer scores
 	for (int i = 0; i < 25; i++) {
 		for (int j = 0; j < 25; j++) {
@@ -134,7 +133,7 @@ gkn_smat gkn_smat_blosum(int n) {
 			}
 		}
 	}
-	
+
 	return mat;
 }
 
@@ -145,7 +144,7 @@ gkn_smat gkn_smat_mng(int m, int n, int g) {
 	assert(n < 0);
 	assert(g < 0);
 
-	sprintf(mat->name, "+%d/%d/%d", m, n, g); 
+	sprintf(mat->name, "+%d/%d/%d", m, n, g);
 	mat->gap = g;
 	for (int i = 0; i < 25; i++) {
 		for (int j = 0; j < 25; j++) {
@@ -153,7 +152,7 @@ gkn_smat gkn_smat_mng(int m, int n, int g) {
 			else        mat->score[i][j] = n;
 		}
 	}
-	
+
 	return mat;
 }
 
@@ -185,13 +184,13 @@ gkn_hsp gkn_hsp_new (void) {
 gkn_hsp gkn_sw(const char *s1, const char *s2, gkn_smat m) {
 	int l1 = strlen(s1);
 	int l2 = strlen(s2);
-	
+
 	// allocate matrices
 	int  ** sm = malloc(sizeof(double*) * (l1+1));
 	char ** tm = malloc(sizeof(double*) * (l1+1));
 	for (int i = 0; i <= l1; i++)  sm[i] = malloc(sizeof(double) * (l2+1));
 	for (int i = 0; i <= l1; i++)  tm[i] = malloc(sizeof(double) * (l2+1));
-	
+
 	// init first column and row
 	for (int i = 0; i <= l1; i++) sm[i][0] = 0, tm[i][0] = '.';
 	for (int j = 1; j <= l2; j++) sm[0][j] = 0, tm[0][j] = '.';
@@ -220,7 +219,7 @@ gkn_hsp gkn_sw(const char *s1, const char *s2, gkn_smat m) {
 			}
 		}
 	}
-	
+
 	// allocate alignment strings
 	char *a1 = malloc((l1 + l2 + 1) * sizeof(char));
 	char *a2 = malloc((l1 + l2 + 1) * sizeof(char));
@@ -254,7 +253,7 @@ gkn_hsp gkn_sw(const char *s1, const char *s2, gkn_smat m) {
 	a1[pos] = '\0';
 	a2[pos] = '\0';
 	a3[pos] = '\0';
-	
+
 	// return values
 	gkn_hsp hsp = gkn_hsp_new();
 	hsp->score = max_s;
@@ -266,7 +265,7 @@ gkn_hsp gkn_sw(const char *s1, const char *s2, gkn_smat m) {
 	hsp->s1 = malloc(hsp->length +1);
 	hsp->s2 = malloc(hsp->length +1);
 	hsp->as = malloc(hsp->length +1);
-	
+
 	for (int i = 0; i < hsp->length; i++) {
 		int pos = hsp->length -i -1;
 		hsp->s1[pos] = a1[i];
@@ -279,7 +278,7 @@ gkn_hsp gkn_sw(const char *s1, const char *s2, gkn_smat m) {
 	hsp->s1[hsp->length] = '\0';
 	hsp->s2[hsp->length] = '\0';
 	hsp->as[hsp->length] = '\0';
-	
+
 	// clean up
 	free(a1);
 	free(a2);
@@ -290,7 +289,7 @@ gkn_hsp gkn_sw(const char *s1, const char *s2, gkn_smat m) {
 	}
 	free(sm);
 	free(tm);
-	
+
 	return hsp;
 }
 

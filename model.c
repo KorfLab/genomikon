@@ -8,23 +8,7 @@
 
 #include "model.h"
 
-// utilities
-
-static int dna2dec(const char *seq, int off, int k) {
-	int idx = 0;
-	for (int i = 0; i < k; i++) {
-		switch (seq[off+i]) {
-			case 'A': case 'a': idx += pow(4, (k -i -1)) * 0; break;
-			case 'C': case 'c': idx += pow(4, (k -i -1)) * 1; break;
-			case 'G': case 'g': idx += pow(4, (k -i -1)) * 2; break;
-			case 'T': case 't': idx += pow(4, (k -i -1)) * 3; break;
-			default: return -1;
-		}
-	}
-	return idx;
-}
-
-static double prob2score(double p) {
+double gkn_p2s(double p) {
 	if (p == 0) return -100; // umm...
 	return log(p/0.25) / log(2);
 }
@@ -40,38 +24,34 @@ void gkn_pwm_free(gkn_pwm pwm) {
 	free(pwm);
 }
 
-gkn_pwm gkn_pwm_read(const char *filename) {
-	char    *line = NULL;
-	size_t   len = 0;
-	ssize_t  read;
-	gkn_pipe io  = gkn_pipe_open(filename, "r");
-	char     blah[256];
+gkn_pwm gkn_pwm_read(gkn_pipe io) {
+	char    *line;
+	char     name[256];
 	int      size;
 	double **score = NULL;
 	double   a, c, g, t;
 	int      row = 0;
 
-	while ((read = getline(&line, &len, io->stream)) != -1) {
-		if (line[0] == '#') {
-			assert(sscanf(line, "# PWM %s %d", blah, &size) == 2);
+	while ((line = gkn_readline(io)) != NULL) {
+		if (line[0] == '%') {
+			assert(sscanf(line, "%% PWM %s %d", name, &size) == 2);
 			score = malloc(sizeof(double*) * size);
 			for (int i = 0; i < size; i++) {
 				score[i] = malloc(sizeof(double) * 4);
 			}
 		} else if (sscanf(line, "%lf %lf %lf %lf", &a, &c, &g, &t) == 4) {
-			score[row][0] = prob2score(a);
-			score[row][1] = prob2score(c);
-			score[row][2] = prob2score(g);
-			score[row][3] = prob2score(t);
+			score[row][0] = gkn_p2s(a);
+			score[row][1] = gkn_p2s(c);
+			score[row][2] = gkn_p2s(g);
+			score[row][3] = gkn_p2s(t);
 			row++;
 		}
 	}
-	gkn_pipe_close(io);
 	if (line) free(line);
 
 	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
-	model->name = malloc(strlen(filename)+1);
-	strcpy(model->name, filename);
+	model->name = malloc(strlen(name)+1);
+	strcpy(model->name, name);
 	model->size = size;
 	model->score = score;
 
@@ -99,33 +79,29 @@ void gkn_mm_free(gkn_mm mm) {
 	free(mm);
 }
 
-gkn_mm gkn_mm_read(const char *filename) {
+gkn_mm gkn_mm_read(gkn_pipe io) {
 	char    *line = NULL;
-	size_t   len = 0;
-	ssize_t  read;
-	gkn_pipe io  = gkn_pipe_open(filename, "r");
 	double  *score = NULL;
 	char     kmer[16];
-	char     blah[256];
+	char     name[256];
 	int      size;
 	double   p;
 
-	while ((read = getline(&line, &len, io->stream)) != -1) {
-		if (line[0] == '#') {
-			assert(sscanf(line, "# MM %s %d", blah, &size) == 2);
+	while ((line = gkn_readline(io)) != NULL) {
+		if (line[0] == '%') {
+			assert(sscanf(line, "%% MM %s %d", name, &size) == 2);
 			score = malloc(sizeof(double) * size);
 		} else if (sscanf(line, "%s %lf", kmer, &p) == 2) {
-			int idx = dna2dec(kmer, 0, strlen(kmer));
+			int idx = gkn_ntindex(kmer, 0, strlen(kmer));
 			if (idx == -1) gkn_exit("alphabet error in: %s", kmer);
-			score[idx] = prob2score(p);
+			score[idx] = gkn_p2s(p);
 		}
 	}
-	gkn_pipe_close(io);
 	if (line) free(line);
 
 	gkn_mm model = malloc(sizeof(struct gkn_MM));
-	model->name = malloc(strlen(filename)+1);
-	strcpy(model->name, filename);
+	model->name = malloc(strlen(name)+1);
+	strcpy(model->name, name);
 	model->k = strlen(kmer);
 	model->size = size;
 	model->score = score;
@@ -137,7 +113,7 @@ double gkn_mm_score(const gkn_mm mm, const char *seq, int pos, int end) {
 	double p = 0;
 	if (pos < mm->k) pos = mm->k;
 	for (int i = pos; i <= end; i++) {
-		int idx = dna2dec(seq, i, mm->k);
+		int idx = gkn_ntindex(seq, i, mm->k);
 		if (idx != -1) p += mm->score[idx];
 	}
 	return p;
@@ -148,7 +124,7 @@ double * gkn_mm_cache(const gkn_mm mm, const char *seq) {
 	double *score = malloc(sizeof(double) * len);
 	for (int i = 0; i < mm->k; i++) score[i] = 0;
 	for (int i = mm->k; i < len; i++) {
-		int idx = dna2dec(seq, i, mm->k);
+		int idx = gkn_ntindex(seq, i, mm->k);
 		if (idx == -1) score[i] = score[i-1];
 		else           score[i] = score[i-1] + mm->score[idx];
 	}
@@ -184,40 +160,35 @@ void gkn_len_free(gkn_len model) {
 	free(model);
 }
 
-gkn_len gkn_len_read(const char *filename, int limit) {
+gkn_len gkn_len_read(gkn_pipe io, int limit) {
 	char    *line = NULL;
-	size_t   len = 0;
-	ssize_t  read;
-	gkn_pipe io = gkn_pipe_open(filename, "r");
 	double  *score = NULL;
 	double   p;
 	int      idx = 0;
 	int      size;
-	char     blah[64];
+	char     name[64];
 
 	// read probabilities
-	while ((read = getline(&line, &len, io->stream)) != -1) {
-		if (line[0] == '#') {
-			assert(sscanf(line, "# LEN %s %d", blah, &size) == 2);
+	while ((line = gkn_readline(io)) != NULL) {
+		if (line[0] == '%') {
+			assert(sscanf(line, "%% LEN %s %d", name, &size) == 2);
 			score = malloc(sizeof(double) * size);
-			
+
 		} else if (sscanf(line, "%lf", &p) == 1) {
 			score[idx] = p;
 			idx++;
 		}
 	}
-
-	gkn_pipe_close(io);
 	if (line) free(line);
-	
+
 	gkn_len model = malloc(sizeof(struct gkn_LEN));
-	model->name = malloc(strlen(filename)+1);
-	strcpy(model->name, filename);
+	model->name = malloc(strlen(name)+1);
+	strcpy(model->name, name);
 	model->score = score;
 	model->size = size;
 	model->limit = limit;
 	model->tail = find_tail(score[size-1], size);
-	
+
 	// convert probabilities to scores
 	for (int i = 0; i < size; i++) {
 		double expect = (double) 1 / limit;

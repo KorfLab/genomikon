@@ -6,6 +6,8 @@
 #ifndef GENOMIKON_FEATURE_H
 #define GENOMIKON_FEATURE_H
 
+#include <limits.h>
+
 #include "toolbox.h"
 
 // gff

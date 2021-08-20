@@ -1,4 +1,4 @@
-# MM exon.mm 256
+% MM exon.mm 256
 AAAA 0.373955
 AAAC 0.164708
 AAAG 0.176472

@@ -1,10 +1,15 @@
+/*****************************************************************************\
+ testing.c
+\*****************************************************************************/
+
 #include <stdio.h>
 #include <assert.h>
-#include "toolbox.h"
-#include "sequence.h"
-#include "model.h"
-#include "feature.h"
+
 #include "align.h"
+#include "feature.h"
+#include "model.h"
+#include "sequence.h"
+#include "toolbox.h"
 
 static int COUNT = 100;
 void test_vec();
@@ -296,7 +301,7 @@ void test_fasta(int update, const char *filename) {
 
 		for (int j = 0; j < 20; j ++) {
 			gkn_pipe io = gkn_pipe_open(filename, "r");
-			while ((in = gkn_fasta_read(io->stream)) != NULL) {
+			while ((in = gkn_fasta_read(io)) != NULL) {
 				gkn_fasta_free(in);
 			}
 			gkn_pipe_close(io);
@@ -333,8 +338,10 @@ void test_pwm(int update, const char *filename) {
 			fflush(stdout);
 		}
 		for (int j = 0; j < 50; j++) {
-			gkn_pwm pwm = gkn_pwm_read(filename);
+			gkn_pipe io = gkn_pipe_open(filename, "r");
+			gkn_pwm pwm = gkn_pwm_read(io);
 			gkn_pwm_free(pwm);
+			gkn_pipe_close(io);
 		}
 	}
 	printf(" done\n");
@@ -348,8 +355,10 @@ void test_mm(int update, const char *filename) {
 			fflush(stdout);
 		}
 		for (int j = 0; j < 10; j++) {
-			gkn_mm mm = gkn_mm_read(filename);
+			gkn_pipe io = gkn_pipe_open(filename, "r");
+			gkn_mm mm = gkn_mm_read(io);
 			gkn_mm_free(mm);
+			gkn_pipe_close(io);
 		}
 	}
 	printf(" done\n");
@@ -363,8 +372,10 @@ void test_len(int update, const char *filename) {
 			fflush(stdout);
 		}
 		for (int j = 0; j < 10; j++) {
-			gkn_len len = gkn_len_read(filename, 1000);
+			gkn_pipe io = gkn_pipe_open(filename, "r");
+			gkn_len len = gkn_len_read(io, 1000);
 			gkn_len_free(len);
+			gkn_pipe_close(io);
 		}
 	}
 	printf(" done\n");

@@ -4,10 +4,31 @@
 
 #include <stdio.h>
 
-#include "toolbox.h"
-#include "sequence.h"
 #include "feature.h"
 #include "model.h"
+#include "sequence.h"
+#include "toolbox.h"
+
+static gkn_pwm getpwm(const char *filename) {
+	gkn_pipe io = gkn_pipe_open(filename, "r");
+	gkn_pwm pwm = gkn_pwm_read(io);
+	gkn_pipe_close(io);
+	return pwm;
+}
+
+static gkn_mm getmm(const char *filename) {
+	gkn_pipe io = gkn_pipe_open(filename, "r");
+	gkn_mm   mm = gkn_mm_read(io);
+	gkn_pipe_close(io);
+	return mm;
+}
+
+static gkn_len getlen(const char *filename, int size) {
+	gkn_pipe io = gkn_pipe_open(filename, "r");
+	gkn_len len = gkn_len_read(io, size);
+	gkn_pipe_close(io);
+	return len;
+}
 
 static char *usage = "\
 geney - gene scoring demo\n\n\
@@ -44,21 +65,21 @@ int main(int argc, char **argv) {
 
 	ffile = argv[1];
 	gfile = argv[2];
-	if (gkn_option("-dpwm")) dpwm = gkn_pwm_read(gkn_option("-dpwm"));
-	if (gkn_option("-apwm")) apwm = gkn_pwm_read(gkn_option("-apwm"));
-	if (gkn_option("-emm"))  emm  = gkn_mm_read(gkn_option("-emm"));
-	if (gkn_option("-imm"))  imm  = gkn_mm_read(gkn_option("-imm"));
-	if (gkn_option("-elen")) elen = gkn_len_read(gkn_option("-elen"), 1000);
-	if (gkn_option("-ilen")) ilen = gkn_len_read(gkn_option("-ilen"), 1000);
+	if (gkn_option("-dpwm")) dpwm = getpwm(gkn_option("-dpwm"));
+	if (gkn_option("-apwm")) apwm = getpwm(gkn_option("-apwm"));
+	if (gkn_option("-emm"))  emm  = getmm(gkn_option("-emm"));
+	if (gkn_option("-imm"))  imm  = getmm(gkn_option("-imm"));
+	if (gkn_option("-elen")) elen = getlen(gkn_option("-elen"), 1000);
+	if (gkn_option("-ilen")) ilen = getlen(gkn_option("-ilen"), 1000);
 
 	// construct mRNA
 	gkn_pipe  io = gkn_pipe_open(ffile, "r");
-	gkn_fasta ff = gkn_fasta_read(io->stream);
+	gkn_fasta ff = gkn_fasta_read(io);
 	gkn_mRNA  tx = gkn_mRNA_read(gfile, ff->seq);
-	
+
 	// test scoring functions
 	double score = 0;
-	
+
 	if (dpwm) {
 		for (int i = 0; i < tx->introns->size; i++) {
 			gkn_feat intron = tx->introns->elem[i];
@@ -69,7 +90,7 @@ int main(int argc, char **argv) {
 			printf("donor: %f %s\n", s, buff);
 		}
 	}
-	
+
 	if (apwm) {
 		for (int i = 0; i < tx->introns->size; i++) {
 			gkn_feat intron = tx->introns->elem[i];
@@ -80,7 +101,7 @@ int main(int argc, char **argv) {
 			printf("acceptor: %f %s\n", s, buff);
 		}
 	}
-	
+
 	if (emm) {
 		for (int i = 0; i < tx->exons->size; i++) {
 			gkn_feat exon = tx->exons->elem[i];
@@ -91,7 +112,7 @@ int main(int argc, char **argv) {
 			free(seq);
 		}
 	}
-	
+
 	if (imm) {
 		for (int i = 0; i < tx->introns->size; i++) {
 			gkn_feat intron = tx->introns->elem[i];
@@ -103,7 +124,7 @@ int main(int argc, char **argv) {
 			free(seq);
 		}
 	}
-	
+
 	if (elen) {
 		for (int i = 0; i < tx->exons->size; i++) {
 			gkn_feat exon = tx->exons->elem[i];
@@ -113,7 +134,7 @@ int main(int argc, char **argv) {
 			printf("exon %f %d\n", s, len);
 		}
 	}
-	
+
 	if (ilen) {
 		for (int i = 0; i < tx->introns->size; i++) {
 			gkn_feat intron = tx->introns->elem[i];
@@ -123,9 +144,9 @@ int main(int argc, char **argv) {
 			printf("intron %f %d\n", s, len);
 		}
 	}
-	
+
 	printf("total score: %f\n", score);
-	
+
 	// clean up
 	gkn_fasta_free(ff);
 	gkn_pipe_close(io);

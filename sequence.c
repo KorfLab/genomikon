@@ -10,6 +10,20 @@
 
 // Utilities
 
+int gkn_ntindex(const char *seq, int off, int k) {
+	int idx = 0;
+	for (int i = 0; i < k; i++) {
+		switch (seq[off+i]) {
+			case 'A': case 'a': idx += pow(4, (k -i -1)) * 0; break;
+			case 'C': case 'c': idx += pow(4, (k -i -1)) * 1; break;
+			case 'G': case 'g': idx += pow(4, (k -i -1)) * 2; break;
+			case 'T': case 't': idx += pow(4, (k -i -1)) * 3; break;
+			default: return -1;
+		}
+	}
+	return idx;
+}
+
 char * gkn_revcomp (const char *seq) {
 	int length = strlen(seq);
 	char *str = gkn_malloc(length +1);
@@ -72,19 +86,19 @@ gkn_fasta gkn_fasta_new (const char *def, const char *seq) {
 	return ff;
 }
 
-gkn_fasta gkn_fasta_read(FILE *stream) {
-	
+gkn_fasta gkn_fasta_read(gkn_pipe io) {
+
 	// check for fasta header
-	char c = fgetc(stream);
+	char c = fgetc(io->stream);
 	if (c == EOF) return NULL;
 	if (c != '>') gkn_exit("gkn_fasta: doesn't look like a fasta file");
-	ungetc(c, stream);
+	ungetc(c, io->stream);
 
 	// def
 	size_t size = 256;
 	int i = 0;
 	char *def = gkn_malloc(size * sizeof(char));
-	while ((c = fgetc(stream)) != EOF) {
+	while ((c = fgetc(io->stream)) != EOF) {
 		if (c == '\n') break;
 		def[i] = c;
 		i++;
@@ -100,9 +114,9 @@ gkn_fasta gkn_fasta_read(FILE *stream) {
 	i = 0;
 	char *seq = gkn_malloc(size * sizeof(char));
 
-	while ((c = fgetc(stream)) != EOF) {
+	while ((c = fgetc(io->stream)) != EOF) {
 		if (c == '>') {
-			ungetc(c, stream);
+			ungetc(c, io->stream);
 			break;
 		}
 		if (isspace((int)c)) continue;
@@ -121,7 +135,7 @@ gkn_fasta gkn_fasta_read(FILE *stream) {
 	return ff;
 }
 
-static int FASTA_LINE_LENGTH = 50;
+static int FASTA_LINE_LENGTH = 80;
 
 void gkn_fasta_write(FILE *stream, const gkn_fasta ff) {
 	if (ff->def[0] != '>') fprintf(stream, ">");

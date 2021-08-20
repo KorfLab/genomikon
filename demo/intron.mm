@@ -1,4 +1,4 @@
-# MM intron.mm 256
+% MM intron.mm 256
 AAAA 0.503131
 AAAC 0.114651
 AAAG 0.082669

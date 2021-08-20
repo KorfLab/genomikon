@@ -6,7 +6,6 @@
 #ifndef GENOMIKON_FEATURE_C
 #define GENOMIKON_FEATURE_C
 
-#include <limits.h>
 #include "feature.h"
 
 // gff

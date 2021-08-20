@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -122,7 +123,6 @@ struct gkn_PIPE {
 	FILE * stream;
 };
 typedef struct gkn_PIPE * gkn_pipe;
-void     gkn_pipe_free(gkn_pipe);
 gkn_pipe gkn_pipe_open(const char *, const char *);
 void     gkn_pipe_close(gkn_pipe);
 
