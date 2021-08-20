@@ -1,11 +1,19 @@
 genomikon
 =========
 
-Genomic sequence analysis library/spells
+Genomic sequence analysis
 
 ## Installation ##
 
+Just `make` from inside the `genomikon` directory to compile the library.
 
+	make
+
+If you want to build the demo apps, you can `make demo` or change to the `demo`
+directory and `make` from there.
+
+The `testing` program is used to check for memory leaks and such. It's not
+necessary, but you can `make test` if you want.
 
 ## Core Functions ##
 
@@ -17,13 +25,6 @@ There are a few demonstration programs in the `demo` directory.
 + geney - gene scoring program (may change to gene prediction)
 + smithy - Smith-Waterman alignment
 
-## Projects ##
-
-+ phic - Poission HMM Integer Classifier
-+ isoformer - alternative isoform generator
-
 ## To Do ##
 
-- Move phic into genomikon projects
-- Move isoformer into genomikon projects
 - Move denada into genomikon library

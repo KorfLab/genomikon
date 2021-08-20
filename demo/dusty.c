@@ -7,15 +7,6 @@
 #include "toolbox.h"
 #include "sequence.h"
 
-static char *usage = "\
-dusty - a low complexity filter for demonstration purposes\n\n\
-usage: dusty <file> [options]\n\
-options:\n\
-  -w <int>    window size [11]\n\
-  -h <float>  entropy threshold [1.1]\n\
-  -n          use Ns for masking (default lowercase)\n\
-  -a <int>    algorithm [1]";
-
 static double entropy(int a, int c, int g, int t) {
 	int total = a + c + g + t;
 	if (total == 0) return 0;
@@ -113,6 +104,15 @@ static char *dust2(const gkn_fasta ff, int w, int t, int lc) {
 
 	return mask;
 }
+
+static char *usage = "\
+dusty - low complexity demo\n\n\
+usage: dusty <file> [options]\n\
+options:\n\
+  -w <int>    window size [11]\n\
+  -h <float>  entropy threshold [1.1]\n\
+  -n          use Ns for masking (default lowercase)\n\
+  -a <int>    algorithm [1]";
 
 int main(int argc, char **argv) {
 	char *file = NULL; // path to fasta file

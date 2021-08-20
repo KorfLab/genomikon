@@ -10,7 +10,7 @@
 #include "model.h"
 
 static char *usage = "\
-geney - a gene scoring demonstration program\n\n\
+geney - gene scoring demo\n\n\
 usage: dusty <fasta file> <gff file> [options]\n\
 options:\n\
   -dpwm <file> donor model position weight matrix\n\

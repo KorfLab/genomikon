@@ -6,6 +6,7 @@ CFLAGS = -O2 -Wall -Werror
 OBJECTS = \
 	align.o\
 	feature.o\
+	hmm.o\
 	model.o\
 	sequence.o\
 	toolbox.o\
@@ -40,7 +41,7 @@ test: $(APP) $(ARC)
 		-pipe Makefile -fasta demo/777.fa -gff demo/777.gff\
 		-pwm demo/donor.pwm -mm demo/exon.mm -len demo/intron.len
 
-all: $(ARC) $(APP)
+demo: $(ARC) $(APP)
 	cd demo && make
 
 # Inference Rules

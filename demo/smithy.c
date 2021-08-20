@@ -11,7 +11,7 @@ void stuff (int m, int n, int g, int a) {
 }
 
 static char *usage = "\
-sw - smith-waterman for demonstration purposes\n\n\
+sw - smith-waterman demo\n\n\
 usage: sw <file1> <file2> [options]\n\
 options:\n\
   -m <int>  match score [1]\n\
