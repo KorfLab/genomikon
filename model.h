@@ -8,11 +8,6 @@
 
 #include "toolbox.h"
 
-// Utilities
-
-int dna2dec(const char *, int, int);
-double prob2score(double);
-
 // Position Weight Matrix
 
 struct gkn_PWM {

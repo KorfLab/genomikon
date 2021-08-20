@@ -10,7 +10,7 @@
 
 // utilities
 
-int dna2dec(const char *seq, int off, int k) {
+static int dna2dec(const char *seq, int off, int k) {
 	int idx = 0;
 	for (int i = 0; i < k; i++) {
 		switch (seq[off+i]) {
@@ -24,7 +24,7 @@ int dna2dec(const char *seq, int off, int k) {
 	return idx;
 }
 
-double prob2score(double p) {
+static double prob2score(double p) {
 	if (p == 0) return -100; // umm...
 	return log(p/0.25) / log(2);
 }
