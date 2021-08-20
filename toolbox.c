@@ -16,20 +16,6 @@ char * gkn_get_version_number (void) {return gkn_version_number;}
 void   gkn_set_program_name (const char *s) {strcpy(gkn_program_name, s);}
 char * gkn_get_program_name (void) {return gkn_program_name;}
 
-void gkn_exit(const char* format, ...) {
-	va_list args;
-
-	fflush(stdout);
-	fprintf(stderr, "ERROR from program %s, libarary version %s\n",
-		gkn_get_program_name(),
-		gkn_get_version_number());
-	va_start(args, format);
-	vfprintf(stderr, format, args);
-	va_end(args);
-	fprintf(stderr, "\n");
-	exit(1);
-}
-
 void * gkn_malloc(size_t size) {
 	void *mem = malloc(size);
 	if (mem == NULL) gkn_exit("gkn_malloc %d", size);
@@ -472,6 +458,33 @@ gkn_pipe gkn_pipe_open(const char *name, const char *mode) {
 	}
 
 	return pipe;
+}
+
+char * gkn_readline(gkn_pipe io) {
+	char line[4096];
+	int  read = 0;
+	while (fgets(line, sizeof(line), io->stream) != NULL) {
+		if (line[0] == '#') continue;
+		read = 1;
+		break;
+	}
+	if (read == 0) return NULL;
+	char *out = malloc(strlen(line) + 1);
+	strcpy(out, line);
+	return out;
+}
+
+void gkn_exit(const char* format, ...) {
+	va_list args;
+	fflush(stdout);
+	fprintf(stderr, "ERROR from program %s, libarary version %s\n",
+		gkn_get_program_name(),
+		gkn_get_version_number());
+	va_start(args, format);
+	vfprintf(stderr, format, args);
+	va_end(args);
+	fprintf(stderr, "\n");
+	exit(1);
 }
 
 #endif

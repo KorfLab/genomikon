@@ -21,9 +21,6 @@ char * gkn_get_version_number(void);
 void   gkn_set_program_name(const char *);
 char * gkn_get_program_name(void);
 
-// specialized output
-void gkn_exit(const char *, ...);
-
 // memory
 void * gkn_malloc(size_t);
 void * gkn_calloc(size_t, size_t);
@@ -128,5 +125,9 @@ typedef struct gkn_PIPE * gkn_pipe;
 void     gkn_pipe_free(gkn_pipe);
 gkn_pipe gkn_pipe_open(const char *, const char *);
 void     gkn_pipe_close(gkn_pipe);
+
+// input/output
+char * gkn_readline(gkn_pipe);
+void   gkn_exit(const char *, ...);
 
 #endif

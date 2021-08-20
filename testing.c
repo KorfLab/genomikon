@@ -81,7 +81,7 @@ int main(int argc, char ** argv) {
 	if (gkn_option("-count")) COUNT = atoi(gkn_option("-count"));
 	int update = (int)((double)COUNT/50);
 	if (update < 2) update = 2;
-	
+
 	if (gkn_option("-vec"))   test_vec(update);
 	if (gkn_option("-ivec"))  test_ivec(update);
 	if (gkn_option("-fvec"))  test_fvec(update);
@@ -178,7 +178,7 @@ void test_fvec(int update) {
 void test_tvec(int update) {
 	char text[16];
 	sprintf(text, "hello world");
-	
+
 	printf("tvec ");
 	for (int i = 0; i < COUNT; i++) {
 		if (i % update == 0) {
@@ -204,7 +204,7 @@ void test_tvec(int update) {
 
 void test_map(int update) {
 	char text[32];
-	
+
 	printf("map ");
 	for (int i = 0; i < COUNT; i++) {
 		if (i % update == 0) {
@@ -276,7 +276,7 @@ void test_pipe(int update, const char *filename) {
 			printf(".");
 			fflush(stdout);
 		}
-		
+
 		for (int j = 0; j < 100; j ++) {
 			gkn_pipe io = gkn_pipe_open(filename, "r");
 			gkn_pipe_close(io);
@@ -293,7 +293,7 @@ void test_fasta(int update, const char *filename) {
 			printf(".");
 			fflush(stdout);
 		}
-		
+
 		for (int j = 0; j < 20; j ++) {
 			gkn_pipe io = gkn_pipe_open(filename, "r");
 			while ((in = gkn_fasta_read(io->stream)) != NULL) {
@@ -313,10 +313,10 @@ void test_gff(int update, const char *filename) {
 			printf(".");
 			fflush(stdout);
 		}
-		
+
 		for (int j = 0; j < 10; j ++) {
 			gkn_pipe io = gkn_pipe_open(filename, "r");
-			while ((gff = gkn_gff_read(io->stream)) != NULL) {
+			while ((gff = gkn_gff_read(io)) != NULL) {
 				gkn_gff_free(gff);
 			}
 			gkn_pipe_close(io);
@@ -392,7 +392,7 @@ void test_sw(int update) {
 	gkn_smat b62 = gkn_smat_blosum(62);
 	char *s1 = "AAAAACDEF";
 	char *s2 = "ACDEFFFFF";
-	
+
 	for (int i = 0; i < COUNT; i++) {
 		if (i % update == 0) {
 			printf(".");
@@ -404,7 +404,7 @@ void test_sw(int update) {
 			gkn_hsp_free(msp);
 		}
 	}
-	
+
 	gkn_smat_free(b62);
 	printf(" done\n");
 }
@@ -413,5 +413,5 @@ void test_this(void) {
 
 	// current private test
 	printf("hello world\n");
-	
+
 }

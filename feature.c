@@ -11,10 +11,10 @@
 
 // gff
 
-gkn_gff gkn_gff_read(FILE *stream) {
-	char    *line = NULL;
-	size_t   len = 0;
-	ssize_t  read;
+gkn_gff gkn_gff_read(gkn_pipe io) {
+	char *line = gkn_readline(io);
+	if (line == NULL) return NULL;
+
 	char sid[32];
 	char src[32];
 	char typ[32];
@@ -24,37 +24,33 @@ gkn_gff gkn_gff_read(FILE *stream) {
 	char str;
 	char pha;
 	char grp[1024];
-	
-	while ((read = getline(&line, &len, stream)) != -1) {
-		int groupon = 0;
-		if (line[0] == '#') continue;
-		if (sscanf(line, "%s %s %s %d %d %s %s %s %s", sid, src, typ,
-			&beg, &end, sco, &str, &pha, grp) == 9) {
-			groupon = 1;
-		} else if (sscanf(line, "%s %s %s %d %d %s %s %s", sid, src, typ,
-			&beg, &end, sco, &str, &pha) == 8) {
-		} else {
-			gkn_exit("gff not parsed correctly\n %s", line);
-		}
-		
-		gkn_gff gff = gkn_gff_new();
-		gff->beg = beg -1;
-		gff->end = end -1;
-		gff->name   = malloc(strlen(sid) +1); strcpy(gff->name,   sid);
-		gff->source = malloc(strlen(src) +1); strcpy(gff->source, src);
-		gff->type   = malloc(strlen(typ) +1); strcpy(gff->type,   typ);
-		if (groupon) {
-			gff->group = malloc(strlen(grp) +1);
-			strcpy(gff->group, grp);
-		}
-		if (strcmp(".", sco) != 0) gff->score = atof(sco);
-		
-		if (line) free(line);
-		return gff;
+	int groupon = 0;
+
+	if (sscanf(line, "%s %s %s %d %d %s %s %s %s", sid, src, typ,
+		&beg, &end, sco, &str, &pha, grp) == 9) {
+		groupon = 1;
+	} else if (sscanf(line, "%s %s %s %d %d %s %s %s", sid, src, typ,
+		&beg, &end, sco, &str, &pha) == 8) {
+	} else {
+		gkn_exit("gff not parsed correctly\n %s", line);
 	}
-	
-	if (line) free(line);
-	return NULL;
+
+	gkn_gff gff = gkn_gff_new();
+	gff->beg = beg -1;
+	gff->end = end -1;
+	gff->name   = malloc(strlen(sid) +1); strcpy(gff->name,   sid);
+	gff->source = malloc(strlen(src) +1); strcpy(gff->source, src);
+	gff->type   = malloc(strlen(typ) +1); strcpy(gff->type,   typ);
+	if (groupon) {
+		gff->group = malloc(strlen(grp) +1);
+		strcpy(gff->group, grp);
+	}
+	if (strcmp(".", sco) != 0) gff->score = atof(sco);
+
+	// clean up
+	free(line);
+
+	return gff;
 }
 
 gkn_gff gkn_gff_new(void) {
@@ -132,7 +128,7 @@ gkn_mRNA gkn_mRNA_read(const char *filename, const char *seq) {
 	char str[8];
 	char pha[8];
 	char grp[1024];
-	
+
 	gkn_mRNA tx = malloc(sizeof(struct gkn_MRNA));
 	tx->seq     = seq;
 	tx->beg     = INT_MAX;
@@ -151,7 +147,7 @@ gkn_mRNA gkn_mRNA_read(const char *filename, const char *seq) {
 		} else {
 			gkn_exit("not parsed: %s", line);
 		}
-		
+
 		if (strcmp("exon", typ) != 0) continue;
 		if (beg < tx->beg) tx->beg = beg;
 		if (end > tx->end) tx->end = end;
@@ -160,7 +156,7 @@ gkn_mRNA gkn_mRNA_read(const char *filename, const char *seq) {
 	}
 	gkn_pipe_close(io);
 	if (line) free(line);
-	
+
 	for (int i = 1; i < tx->exons->size; i++) {
 		gkn_feat prev = tx->exons->elem[i-1];
 		gkn_feat this = tx->exons->elem[i];
@@ -169,7 +165,7 @@ gkn_mRNA gkn_mRNA_read(const char *filename, const char *seq) {
 		gkn_feat intron = gkn_feat_new(seq, ib, ie);
 		gkn_vec_push(tx->introns, intron);
 	}
-	
+
 	return tx;
 }
 
@@ -182,7 +178,7 @@ void gkn_mRNA_free(gkn_mRNA tx) {
 	if (tx->introns) {
 		for (int i = 0; i < tx->introns->size; i++)
 			gkn_feat_free(tx->introns->elem[i]);
-	
+
 		gkn_vec_free(tx->introns);
 	}
 	free(tx);

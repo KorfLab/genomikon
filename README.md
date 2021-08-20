@@ -27,4 +27,5 @@ There are a few demonstration programs in the `demo` directory.
 
 ## To Do ##
 
+- Change all file i/o to pipe and readline
 - Move denada into genomikon library

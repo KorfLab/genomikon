@@ -12,7 +12,7 @@
 struct gkn_GFF {
 	char  *name;    // chromosome or sequence name
 	char  *source;  // whatever (ik for stuff here?)
-	char  *type;    // should be SO compliant but... 
+	char  *type;    // should be SO compliant but...
 	char  *group;   // possibly not used
 	int    beg;     // 0-based internally
 	int    end;     // 0-based internally
@@ -21,7 +21,7 @@ struct gkn_GFF {
 	char   phase;   // {.012}
 };
 typedef struct gkn_GFF * gkn_gff;
-gkn_gff gkn_gff_read(FILE *);
+gkn_gff gkn_gff_read(gkn_pipe);
 gkn_gff gkn_gff_new(void);
 void    gkn_gff_free(gkn_gff);
 
