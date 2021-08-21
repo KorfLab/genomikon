@@ -90,7 +90,7 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 
 	// check for fasta header
 	char c = fgetc(io->stream);
-	if (c == EOF || c == 255) return NULL;
+	if (c == EOF || (unsigned char)c == 255) return NULL;
 	if (c != '>') gkn_exit("fasta? %c %d", c, (int)c);
 	ungetc(c, io->stream);
 
