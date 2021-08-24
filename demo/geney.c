@@ -2,12 +2,7 @@
  geney.c
 \*****************************************************************************/
 
-#include <stdio.h>
-
-#include "feature.h"
-#include "model.h"
-#include "sequence.h"
-#include "toolbox.h"
+#include "genomikon.h"
 
 static gkn_pwm getpwm(const char *filename) {
 	gkn_pipe io = gkn_pipe_open(filename, "r");

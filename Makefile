@@ -1,6 +1,7 @@
 # Makefile for the genomikon
 
 LIB = -lm
+CC = gcc
 CFLAGS = -O2 -Wall -Werror
 
 OBJECTS = \

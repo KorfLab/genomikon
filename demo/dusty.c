@@ -2,10 +2,7 @@
  dusty.c
 \*****************************************************************************/
 
-#include <stdio.h>
-
-#include "sequence.h"
-#include "toolbox.h"
+#include "genomikon.h"
 
 static double entropy(int a, int c, int g, int t) {
 	int total = a + c + g + t;

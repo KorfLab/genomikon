@@ -2,9 +2,7 @@
  smithy.c
 \*****************************************************************************/
 
-#include "align.h"
-#include "sequence.h"
-#include "toolbox.h"
+#include "genomikon.h"
 
 void stuff (int m, int n, int g, int a) {
 

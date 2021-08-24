@@ -2,12 +2,7 @@
  viterby.c
 \*****************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "hmm.h"
-#include "sequence.h"
-#include "toolbox.h"
+#include "genomikon.h"
 
 static char *usage = "\
 viterby - gene prediction demo\n\n\

@@ -3,6 +3,7 @@
 LIB = -lm -lgenomikon
 LINC = -L..
 INC = -I..
+CC = gcc
 CFLAGS = -O2 -Wall -Werror
 
 APP1 = dusty
