@@ -1,7 +1,6 @@
 # Makefile for genomikon demo programs
 
-LIB = -lm -lgenomikon
-LINC = -L..
+LIB = -L.. -lgenomikon -lm
 INC = -I..
 CC = gcc
 CFLAGS = -O2 -Wall -Werror
@@ -25,16 +24,16 @@ default:
 	make $(APP4)
 
 $(APP1): $(OBJ1)
-	$(CC) -o $(APP1) $(OBJ1) $(LINC) $(LIB)
+	$(CC) -o $(APP1) $(OBJ1) $(LIB)
 
 $(APP2): $(OBJ2)
-	$(CC) -o $(APP2) $(OBJ2) $(LINC) $(LIB)
+	$(CC) -o $(APP2) $(OBJ2) $(LIB)
 
 $(APP3): $(OBJ3)
-	$(CC) -o $(APP3) $(OBJ3) $(LINC) $(LIB)
+	$(CC) -o $(APP3) $(OBJ3) $(LIB)
 
 $(APP4): $(OBJ4)
-	$(CC) -o $(APP4) $(OBJ4) $(LINC) $(LIB)
+	$(CC) -o $(APP4) $(OBJ4) $(LIB)
 
 clean:
 	rm -f *.o $(APP1) $(APP2) $(APP3) $(APP4)
