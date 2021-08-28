@@ -18,6 +18,7 @@ void test_fvec(int);
 void test_tvec(int);
 void test_vec(int);
 void test_tmap(int);
+void test_xtree(int);
 void test_map(int);
 void test_feat(int);
 void test_smat(int);
@@ -40,6 +41,7 @@ options:\n\
   -tvec\n\
   -tmap\n\
   -map\n\
+  -xtree\n\
   -feat\n\
   -smat\n\
   -sw\n\
@@ -70,6 +72,7 @@ int main(int argc, char ** argv) {
 	gkn_register_option("-vec",   0);
 	gkn_register_option("-tmap",  0);
 	gkn_register_option("-map",   0);
+	gkn_register_option("-xtree", 0);
 	gkn_register_option("-feat",  0);
 	gkn_register_option("-smat",  0);
 	gkn_register_option("-sw",    0);
@@ -92,7 +95,8 @@ int main(int argc, char ** argv) {
 	if (gkn_option("-fvec"))  test_fvec(update);
 	if (gkn_option("-tvec"))  test_tvec(update);
 	if (gkn_option("-tmap"))  test_tmap(update);
-	if (gkn_option("-map"))	 test_map(update);
+	if (gkn_option("-map"))	  test_map(update);
+	if (gkn_option("-xtree")) test_xtree(update);
 	if (gkn_option("-feat"))  test_feat(update);
 	if (gkn_option("-smat"))  test_smat(update);
 	if (gkn_option("-sw"))    test_sw(update);
@@ -251,6 +255,37 @@ void test_tmap(int update) {
 		}
 		gkn_tvec_free(keys);
 		gkn_tmap_free(tmap);
+	}
+	printf(" done\n");
+}
+
+void test_xtree(int update) {
+	char text[32];
+
+	printf("xtree ");
+	for (int i = 0; i < COUNT; i++) {
+		if (i % update == 0) {
+			printf(".");
+			fflush(stdout);
+		}
+		gkn_xtree xt = gkn_xtree_new();
+
+		for (int j = 0; j < 1111; j++) {
+			sprintf(text, "key %d", j);
+			gkn_xtree_set(xt, text, NULL);
+		}
+
+		gkn_tvec keys = gkn_xtree_keys(xt);
+		for (int k = 0; k < keys->size; k++) {
+			void *v = gkn_xtree_get(xt, keys->elem[k]);
+			if (v != NULL) {
+				printf("key %s has non NULL value\n", keys->elem[k]);
+				gkn_exit("xtree integrity failure");
+			}
+		}
+		gkn_tvec_free(keys);
+		gkn_xtree_free(xt);
+
 	}
 	printf(" done\n");
 }

@@ -33,7 +33,6 @@ void * gkn_realloc(void *p, size_t size) {
 	return mem;
 }
 
-
 void gkn_ivec_free(gkn_ivec vec) {
 	if (vec == NULL) return;
 	if (vec->elem) free(vec->elem);
@@ -355,6 +354,140 @@ char * gkn_tmap_get(const gkn_tmap t, const char *key) {
 gkn_tvec gkn_tmap_keys(const gkn_tmap t) {
 	return gkn_map_keys(t->hash);
 }
+
+// suffix tree
+
+#define MAX_WORD_LENGTH 65536
+
+void gkn_xnode_free(gkn_xnode xn) {
+	gkn_vec_free(xn->children);
+	free(xn->data);
+	free(xn);
+}
+
+gkn_xnode gkn_xnode_new (char c) {
+	gkn_xnode xn = gkn_malloc(sizeof(struct gkn_XNODE));
+	xn->children = gkn_vec_new();
+	xn->data     = NULL;
+	xn->c        = c;
+	return xn;
+}
+
+gkn_xnode gkn_xnode_search (const gkn_xnode xn, char c) {
+	for (int i = 0; i < xn->children->size; i++) {
+		gkn_xnode child = xn->children->elem[i];
+		if (child->c == c) return child;
+	}
+	return NULL;
+}
+
+void gkn_xtree_free (gkn_xtree xt) {
+	for (int i = 0; i < xt->alloc->size; i++) {
+		gkn_xnode node = xt->alloc->elem[i];
+		gkn_xnode_free(node);
+	}
+	gkn_vec_free(xt->alloc);
+	if (xt->head) gkn_xnode_free(xt->head);
+	free(xt);
+}
+
+gkn_xtree gkn_xtree_new (void) {
+	gkn_xtree xt = gkn_malloc(sizeof(struct gkn_xtree));
+	xt->head  = gkn_xnode_new(0);
+	xt->alloc = gkn_vec_new();
+	return xt;
+}
+
+void gkn_xtree_set (gkn_xtree xt, const char *string, void *value) {
+	int len = strlen(string);
+	if (len < 1) gkn_exit("gkn_xtree_set with empty string");
+	if (len >= MAX_WORD_LENGTH)
+		gkn_exit("gkn_xtree word length exceeded (%d)\n", MAX_WORD_LENGTH);
+
+	gkn_xnode parent = xt->head;
+	for (int i = 0; i < len; i++) {
+		char c = string[i];
+		gkn_xnode child = gkn_xnode_search(parent, c);
+		if (child == NULL) {
+			child = gkn_xnode_new(c);
+			gkn_vec_push(parent->children, child);
+			gkn_vec_push(xt->alloc, child);
+		}
+		parent = child;
+	}
+
+	parent->data = value;
+}
+
+void * gkn_xtree_get (const gkn_xtree xt, const char *string) {
+	int len = strlen(string);
+	if (len < 1) gkn_exit("gkn_xtree_get with empty string");
+
+	gkn_xnode parent = xt->head;
+	for (int i = 0; i < len; i++) {
+		char c = string[i];
+		gkn_xnode child = gkn_xnode_search(parent, c);
+		if (child == NULL) return NULL;
+		parent = child;
+	}
+	return parent->data;
+}
+
+int gkn_xtree_check (const gkn_xtree xt, const char *string) {
+	int len = strlen(string);
+	if (len < 1) gkn_exit("gkn_xtree_check with empty string");
+
+	gkn_xnode parent = xt->head;
+	for (int i = 0; i < len; i++) {
+		char c = string[i];
+		gkn_xnode child = gkn_xnode_search(parent, c);
+		if (child == NULL) return 0;
+		parent = child;
+	}
+	return 1;
+}
+
+gkn_xnode gkn_xtree_node (const gkn_xtree xt, const char *string) {
+	int len = strlen(string);
+	if (len < 1) gkn_exit("gkn_xtree_node with empty string");
+
+	gkn_xnode parent = xt->head;
+	for (int i = 0; i < len; i++) {
+		char c = string[i];
+		gkn_xnode child = gkn_xnode_search(parent, c);
+		if (child == NULL) return 0;
+		parent = child;
+	}
+	return parent;
+}
+
+static void xtree_add_keys (const gkn_xnode parent, gkn_tvec keys, char *key,
+	int length)
+{
+	if (parent->data) gkn_tvec_push(keys, key);
+
+	for (int i = 0; i < parent->children->size; i++) {
+		gkn_xnode child = parent->children->elem[i];
+		key[length] = child->c;
+		key[length+1] = '\0';
+		xtree_add_keys(parent->children->elem[i], keys, key, length+1);
+	}
+}
+
+gkn_tvec gkn_xtree_keys (const gkn_xtree xt) {
+	char     key[MAX_WORD_LENGTH];
+	gkn_tvec keys = gkn_tvec_new();
+
+	for (int i = 0; i < xt->head->children->size; i++) {
+		gkn_xnode parent = xt->head->children->elem[i];
+		key[0] = parent->c;
+		key[1] = '\0';
+		xtree_add_keys(parent, keys, key, 1);
+	}
+
+	return keys;
+}
+
 
 // command line options
 

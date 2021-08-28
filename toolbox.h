@@ -110,6 +110,30 @@ char *   gkn_tmap_get(const gkn_tmap, const char *);
 int      gkn_tmap_exists(const gkn_tmap, const char *);
 gkn_tvec gkn_tmap_keys(const gkn_tmap);
 
+/* generic suffix tree */
+struct gkn_XNODE {
+	gkn_vec children;
+	void  *data;
+	char   c;
+};
+typedef struct gkn_XNODE * gkn_xnode;
+void      gkn_xnode_free(gkn_xnode);
+gkn_xnode gkn_xnode_new(char);
+gkn_xnode gkn_xnode_search(const gkn_xnode, char c);
+
+struct gkn_xtree {
+	gkn_xnode head;
+	gkn_vec   alloc;
+};
+typedef struct gkn_xtree * gkn_xtree;
+void      gkn_xtree_free(gkn_xtree);
+gkn_xtree gkn_xtree_new(void);
+void *    gkn_xtree_get(const gkn_xtree, const char *);
+int       gkn_xtree_check(const gkn_xtree, const char *);
+gkn_xnode gkn_xtree_node(const gkn_xtree, const char *);
+void      gkn_xtree_set(gkn_xtree, const char *, void *);
+gkn_tvec  gkn_xtree_keys(const gkn_xtree);
+
 // command line processing
 void   gkn_register_option(const char *, int);
 void   gkn_parse_options(int *, char **);
