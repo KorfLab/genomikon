@@ -24,6 +24,7 @@ void test_feat(int);
 void test_smat(int);
 void test_sw(int);
 void test_pipe(int, const char *);
+void test_read(int, const char *);
 void test_fasta(int, const char *);
 void test_gff(int, const char *);
 void test_pwm(int, const char *);
@@ -35,22 +36,14 @@ void test_this(void);
 static char usage[] = "\
 usage: testing [options]\n\
 options:\n\
-  -vec\n\
-  -ivec\n\
-  -fvec\n\
-  -tvec\n\
-  -tmap\n\
-  -map\n\
-  -xtree\n\
-  -feat\n\
-  -smat\n\
-  -sw\n\
+  -vec -ivec -fvec -tvec -map -tmap -xtree\n\
+  -feat -smat -sw\n\
   -pipe  <file>\n\
   -fasta <file>\n\
   -gff   <file>\n\
-  -pwm   <file\n\
+  -pwm   <file>\n\
   -mm    <file>\n\
-  -len   <file\n\
+  -len   <file>\n\
   -count <int> [100]\n\
 ";
 
@@ -77,6 +70,7 @@ int main(int argc, char ** argv) {
 	gkn_register_option("-smat",  0);
 	gkn_register_option("-sw",    0);
 	gkn_register_option("-pipe",  1);
+	gkn_register_option("-read",  1);
 	gkn_register_option("-fasta", 1);
 	gkn_register_option("-gff",   1);
 	gkn_register_option("-pwm",   1);
@@ -101,6 +95,7 @@ int main(int argc, char ** argv) {
 	if (gkn_option("-smat"))  test_smat(update);
 	if (gkn_option("-sw"))    test_sw(update);
 	if (gkn_option("-pipe"))  test_pipe(update,  gkn_option("-pipe"));
+	if (gkn_option("-read"))  test_read(update,  gkn_option("-read"));
 	if (gkn_option("-fasta")) test_fasta(update, gkn_option("-fasta"));
 	if (gkn_option("-gff"))   test_gff(update,   gkn_option("-gff"));
 	if (gkn_option("-pwm"))   test_pwm(update,   gkn_option("-pwm"));
@@ -319,6 +314,24 @@ void test_pipe(int update, const char *filename) {
 
 		for (int j = 0; j < 100; j ++) {
 			gkn_pipe io = gkn_pipe_open(filename, "r");
+			gkn_pipe_close(io);
+		}
+	}
+	printf(" done\n");
+}
+
+void test_read(int update, const char *filename) {
+	printf("read ");
+	for (int i = 0; i < COUNT; i++) {
+		if (i % update == 0) {
+			printf(".");
+			fflush(stdout);
+		}
+
+		for (int j = 0; j < 100; j ++) {
+			gkn_pipe io = gkn_pipe_open(filename, "r");
+			char *line = gkn_readline(io);
+			free(line);
 			gkn_pipe_close(io);
 		}
 	}

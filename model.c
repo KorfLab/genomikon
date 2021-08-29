@@ -39,15 +39,18 @@ gkn_pwm gkn_pwm_read(gkn_pipe io) {
 			for (int i = 0; i < size; i++) {
 				score[i] = malloc(sizeof(double) * 4);
 			}
+			free(line);
 		} else if (sscanf(line, "%lf %lf %lf %lf", &a, &c, &g, &t) == 4) {
 			score[row][0] = gkn_p2s(a);
 			score[row][1] = gkn_p2s(c);
 			score[row][2] = gkn_p2s(g);
 			score[row][3] = gkn_p2s(t);
 			row++;
+			free(line);
+		} else {
+			free(line);
 		}
 	}
-	if (line) free(line);
 
 	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
 	model->name = malloc(strlen(name)+1);
@@ -91,13 +94,16 @@ gkn_mm gkn_mm_read(gkn_pipe io) {
 		if (line[0] == '%') {
 			assert(sscanf(line, "%% MM %s %d", name, &size) == 2);
 			score = malloc(sizeof(double) * size);
+			free(line);
 		} else if (sscanf(line, "%s %lf", kmer, &p) == 2) {
 			int idx = gkn_ntindex(kmer, 0, strlen(kmer));
 			if (idx == -1) gkn_exit("alphabet error in: %s", kmer);
 			score[idx] = gkn_p2s(p);
+			free(line);
+		} else {
+			free(line);
 		}
 	}
-	if (line) free(line);
 
 	gkn_mm model = malloc(sizeof(struct gkn_MM));
 	model->name = malloc(strlen(name)+1);
@@ -173,13 +179,15 @@ gkn_len gkn_len_read(gkn_pipe io, int limit) {
 		if (line[0] == '%') {
 			assert(sscanf(line, "%% LEN %s %d", name, &size) == 2);
 			score = malloc(sizeof(double) * size);
-
+			free(line);
 		} else if (sscanf(line, "%lf", &p) == 1) {
 			score[idx] = p;
 			idx++;
+			free(line);
+		} else {
+			free(line);
 		}
 	}
-	if (line) free(line);
 
 	gkn_len model = malloc(sizeof(struct gkn_LEN));
 	model->name = malloc(strlen(name)+1);

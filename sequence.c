@@ -90,9 +90,9 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 
 	// check for fasta header
 	char c = fgetc(io->stream);
+	ungetc(c, io->stream);
 	if (c == EOF || (unsigned char)c == 255) return NULL;
 	if (c != '>') gkn_exit("fasta? %c %d", c, (int)c);
-	ungetc(c, io->stream);
 
 	// def
 	char *def = gkn_readline(io);
@@ -102,8 +102,7 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 	while (1) {
 		char c = fgetc(io->stream);
 		ungetc(c, io->stream);
-		if (c == EOF) break;
-		if (c == '>') break;
+		if (c == EOF || (unsigned char)c == 255 || c == '>' ) break;
 		char *line = gkn_readline(io);
 		if (line == NULL) break;
 		gkn_vec_push(lines, line);
