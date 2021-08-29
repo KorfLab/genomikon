@@ -17,11 +17,15 @@ OBJ3 = smithy.o
 APP4 = viterby
 OBJ4 = viterby.o
 
+APP5 = wordy
+OBJ5 = wordy.o
+
 default:
 	make $(APP1)
 	make $(APP2)
 	make $(APP3)
 	make $(APP4)
+	make $(APP5)
 
 $(APP1): $(OBJ1)
 	$(CC) -o $(APP1) $(OBJ1) $(LIB)
@@ -35,8 +39,14 @@ $(APP3): $(OBJ3)
 $(APP4): $(OBJ4)
 	$(CC) -o $(APP4) $(OBJ4) $(LIB)
 
+$(APP5): $(OBJ5)
+	$(CC) -o $(APP5) $(OBJ5) $(LIB)
+
 clean:
-	rm -f *.o $(APP1) $(APP2) $(APP3) $(APP4)
+	rm -f *.o $(APP1) $(APP2) $(APP3) $(APP4) $(APP5)
+
+test:
+	echo "no tests yet"
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
