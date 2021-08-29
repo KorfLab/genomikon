@@ -24,9 +24,11 @@ static double entropy(int a, int c, int g, int t) {
 
 static char *dust1(const gkn_fasta ff, int w, int t, int lc) {
 	int A, C, G, T;
+
 	char *mask = malloc(ff->length+1);
 	strcpy(mask, ff->seq);
 	for (int i = 0; i < ff->length; i++) mask[i] = toupper(mask[i]);
+
 	for (int i = 0; i < ff->length -w + 1; i++) {
 		A = 0; C = 0; G = 0; T = 0;
 		for (int j = 0; j < w; j++) {

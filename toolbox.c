@@ -596,14 +596,18 @@ char * gkn_readline(gkn_pipe io) {
 	char line[4096];
 	int  read = 0;
 	while (fgets(line, sizeof(line), io->stream) != NULL) {
-		if (line[0] == '#') continue;
+		if (line[0] == '#') continue; // skipping comments
 		if (strlen(line) == 0) continue;
 		read = 1;
 		break;
 	}
 	if (read == 0) return NULL;
+
+	// stripping newline
+	if (line[strlen(line) -1] == '\n') line[strlen(line) -1] = '\0';
 	char *out = malloc(strlen(line) + 1);
 	strcpy(out, line);
+
 	return out;
 }
 

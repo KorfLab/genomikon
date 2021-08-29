@@ -101,22 +101,20 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 	gkn_vec lines = gkn_vec_new();
 	while (1) {
 		char c = fgetc(io->stream);
+		ungetc(c, io->stream);
 		if (c == EOF) break;
-		if (c == '>') {
-			ungetc(c, io->stream);
-			break;
-		}
+		if (c == '>') break;
 		char *line = gkn_readline(io);
 		if (line == NULL) break;
 		gkn_vec_push(lines, line);
 	}
-	
+
 	int letters = 0;
 	for (int i = 0; i < lines->size; i++) {
 		char *line = lines->elem[i];
 		letters += strlen(line);
 	}
-	
+
 	char *seq = malloc(letters + 1);
 	int off = 0;
 	for (int i = 0; i < lines->size; i++) {
@@ -124,7 +122,7 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 		strcpy(seq + off, line);
 		off += strlen(line);
 	}
-	
+
 	// clean up
 	for (int i = 0; i < lines->size; i++) {
 		free(lines->elem[i]);
@@ -135,8 +133,8 @@ gkn_fasta gkn_fasta_read(gkn_pipe io) {
 	gkn_fasta ff = malloc(sizeof(struct gkn_FASTA));
 	ff->def = def;
 	ff->seq = seq;
-	ff->length = 1; //strlen(seq);
-	
+	ff->length = strlen(seq);
+
 	return ff;
 }
 

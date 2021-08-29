@@ -45,8 +45,9 @@ $(APP5): $(OBJ5)
 clean:
 	rm -f *.o $(APP1) $(APP2) $(APP3) $(APP4) $(APP5)
 
-test:
-	echo "no tests yet"
+test: $(APP1) $(APP2) $(APP3) $(APP4) $(APP5)
+	./$(APP1) 777.fa
+	./$(APP5) popular.txt -pop 100 -gen 20 -seed 1
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
