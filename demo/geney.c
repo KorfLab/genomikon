@@ -27,7 +27,7 @@ static gkn_len getlen(const char *filename, int size) {
 
 static char *usage = "\
 geney - gene scoring demo\n\n\
-usage: dusty <fasta file> <gff file> [options]\n\
+usage: geney <fasta file> <gff file> [options]\n\
 options:\n\
   -dpwm <file> donor model position weight matrix\n\
   -apwm <file> acceptor model position weight matrix\n\

@@ -3,7 +3,7 @@
 LIB = -L.. -lgenomikon -lm
 INC = -I..
 CC = gcc
-CFLAGS = -O2 -Wall -Werror
+#CFLAGS = -O2 -Wall -Werror
 
 APP1 = dusty
 OBJ1 = dusty.o
@@ -46,8 +46,10 @@ clean:
 	rm -f *.o $(APP1) $(APP2) $(APP3) $(APP4) $(APP5)
 
 test: $(APP1) $(APP2) $(APP3) $(APP4) $(APP5)
-	./$(APP1) 777.fa
-	./$(APP5) popular.txt -pop 100 -gen 20 -seed 1
+	./dusty 777.fa
+	./geney 777.fa 777.gff -apwm acceptor.pwm -dpwm donor.pwm -emm exon.mm -imm intron.mm -elen exon.len -ilen intron.len
+	./smithy WHATEVER WHICHEVER
+	./wordy popular.txt -pop 100 -gen 20 -seed 1
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
