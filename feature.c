@@ -25,10 +25,10 @@ gkn_gff gkn_gff_read(gkn_pipe io) {
 	char grp[1024];
 	int groupon = 0;
 
-	if (sscanf(line, "%s %s %s %d %d %s %s %s %s", sid, src, typ,
+	if (sscanf(line, "%s %s %s %d %d %s %c %c %s", sid, src, typ,
 		&beg, &end, sco, &str, &pha, grp) == 9) {
 		groupon = 1;
-	} else if (sscanf(line, "%s %s %s %d %d %s %s %s", sid, src, typ,
+	} else if (sscanf(line, "%s %s %s %d %d %s %c %c", sid, src, typ,
 		&beg, &end, sco, &str, &pha) == 8) {
 	} else {
 		gkn_exit("gff not parsed correctly\n %s", line);
