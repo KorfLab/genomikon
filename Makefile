@@ -38,7 +38,7 @@ depend: $(OBJECTS:.o=.c)
 	gcc -MM $^ > $@
 
 test: $(APP) $(ARC)
-	./$(APP) -vec -ivec -fvec -tvec -map -tmap -smat -sw \
+	./testing -vec -ivec -fvec -tvec -map -tmap -smat -sw \
 		-pipe Makefile -fasta demo/777.fa -gff demo/777.gff\
 		-pwm demo/donor.pwm -mm demo/exon.mm -len demo/intron.len
 

@@ -3,7 +3,7 @@
 LIB = -L.. -lgenomikon -lm
 INC = -I..
 CC = gcc
-#CFLAGS = -O2 -Wall -Werror
+CFLAGS = -O2 -Wall -Werror
 
 APP1 = dusty
 OBJ1 = dusty.o
