@@ -37,6 +37,8 @@ gkn_gff gkn_gff_read(gkn_pipe io) {
 	gkn_gff gff = gkn_gff_new();
 	gff->beg = beg -1;
 	gff->end = end -1;
+	gff->strand = str;
+	gff->phase = pha;
 	gff->name   = malloc(strlen(sid) +1); strcpy(gff->name,   sid);
 	gff->source = malloc(strlen(src) +1); strcpy(gff->source, src);
 	gff->type   = malloc(strlen(typ) +1); strcpy(gff->type,   typ);
