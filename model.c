@@ -165,7 +165,7 @@ void gkn_len_free(gkn_len model) {
 	free(model);
 }
 
-gkn_len gkn_len_read(gkn_pipe io, int limit) {
+gkn_len gkn_len_read(gkn_pipe io) {
 	char    *line = NULL;
 	double  *score = NULL;
 	double   p;
@@ -193,11 +193,10 @@ gkn_len gkn_len_read(gkn_pipe io, int limit) {
 	strcpy(model->name, name);
 	model->score = score;
 	model->size = size;
-	model->limit = limit;
 	model->tail = find_tail(score[size-1], size);
 
 	// convert probabilities to scores
-	double expect = (double) 1 / limit;
+	double expect = (double) 1 / model->size;
 	for (int i = 0; i < size; i++) {
 		score[i] = log(score[i]/expect) / log(2); // divide by zero?
 	}
@@ -210,7 +209,7 @@ double gkn_len_score(const gkn_len len, int x) {
 	if (x >= len->size) {
 		double p = 1 / len->tail;
 		double q = pow(1-p, x-1) * p;
-		double expect = (double)1 / len->limit;
+		double expect = (double)1 / len->size;
 		double s = log(q/expect) / log(2);
 		return s;
 	} else {

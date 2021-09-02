@@ -421,7 +421,7 @@ void test_len(int update, const char *filename) {
 		}
 		for (int j = 0; j < 10; j++) {
 			gkn_pipe io = gkn_pipe_open(filename, "r");
-			gkn_len len = gkn_len_read(io, 1000);
+			gkn_len len = gkn_len_read(io);
 			gkn_len_free(len);
 			gkn_pipe_close(io);
 		}

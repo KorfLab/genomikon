@@ -45,13 +45,13 @@ double   gkn_mm_score_cache(const double *, int, int);
 struct gkn_LEN {
 	char   *name;   // exon, intron, actually unused
 	int     size;   // length of defined region
-	int     limit;  // maximum length for scoring
+//	int     limit;  // maximum length for scoring
 	double *score;  // values for the defined region
 	double  tail;   // mean of geometric tail
 };
 typedef struct gkn_LEN * gkn_len;
 void    gkn_len_free(gkn_len);
-gkn_len gkn_len_read(gkn_pipe, int);
+gkn_len gkn_len_read(gkn_pipe/*, int*/);
 double  gkn_len_score(const gkn_len, int);
 
 #endif
