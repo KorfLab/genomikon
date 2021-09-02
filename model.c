@@ -198,8 +198,8 @@ gkn_len gkn_len_read(gkn_pipe io, int limit) {
 	model->tail = find_tail(score[size-1], size);
 
 	// convert probabilities to scores
+	double expect = (double) 1 / limit;
 	for (int i = 0; i < size; i++) {
-		double expect = (double) 1 / limit;
 		score[i] = log(score[i]/expect) / log(2);
 	}
 
