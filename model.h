@@ -38,7 +38,7 @@ void     gkn_mm_free(gkn_mm);
 gkn_mm   gkn_mm_read(gkn_pipe);
 double   gkn_mm_score(const gkn_mm, const char *, int, int);
 double * gkn_mm_cache(const gkn_mm, const char *);
-double   gkn_mm_score_cache(const double *, int, int);
+double   gkn_mm_score_cache(const gkn_mm, const double *, int, int);
 
 // Length model
 

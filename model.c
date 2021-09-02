@@ -118,7 +118,7 @@ gkn_mm gkn_mm_read(gkn_pipe io) {
 double gkn_mm_score(const gkn_mm mm, const char *seq, int pos, int end) {
 	double p = 0;
 	if (pos < mm->k) pos = mm->k;
-	for (int i = pos; i <= end; i++) {
+	for (int i = pos; i < end - mm->k +2; i++) {
 		int idx = gkn_ntindex(seq, i, mm->k);
 		if (idx != -1) p += mm->score[idx];
 	}
@@ -137,8 +137,8 @@ double * gkn_mm_cache(const gkn_mm mm, const char *seq) {
 	return score;
 }
 
-double gkn_mm_score_cache(const double *cache, int beg, int end) {
-	return cache[end] - cache[beg -1];
+double gkn_mm_score_cache(const gkn_mm mm, const double *v, int beg, int end) {
+	return v[end - mm->k +1] - v[beg -1];
 }
 
 // Length model
