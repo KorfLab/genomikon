@@ -152,7 +152,6 @@ static double find_tail(double val, int x) {
 		m = (hi + lo) / 2;
 		double p = 1 / m;
 		double f = pow(1-p, x-1) * p;
-		//printf("%f %f %f %f\n", lo, hi, m, f);
 		if (f < val) lo += (m - lo) / 2;
 		else         hi -= (hi - m) / 2;
 	}
@@ -200,7 +199,7 @@ gkn_len gkn_len_read(gkn_pipe io, int limit) {
 	// convert probabilities to scores
 	double expect = (double) 1 / limit;
 	for (int i = 0; i < size; i++) {
-		score[i] = log(score[i]/expect) / log(2);
+		score[i] = log(score[i]/expect) / log(2); // divide by zero?
 	}
 
 	return model;
