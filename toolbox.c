@@ -78,18 +78,18 @@ gkn_fvec gkn_fvec_new(void) {
 	return vec;
 }
 
-void gkn_fvec_push(gkn_fvec vec, float val) {
+void gkn_fvec_push(gkn_fvec vec, double val) {
 	if (vec->limit == vec->size) {
 		if (vec->limit == 0) vec->limit	 = 1;
 		else				 vec->limit *= 2;
-		vec->elem = gkn_realloc(vec->elem, vec->limit * sizeof(float));
+		vec->elem = gkn_realloc(vec->elem, vec->limit * sizeof(double));
 	}
 	vec->elem[vec->size] = val;
 	vec->last = val;
 	vec->size++;
 }
 
-float gkn_fvec_pop(gkn_fvec vec) {
+double gkn_fvec_pop(gkn_fvec vec) {
 	if (vec->size == 0) gkn_exit("can't pop a zero-length vector");
 	vec->size--;
 	return vec->elem[vec->size];
@@ -171,7 +171,7 @@ static double HASH_MULTIPLIER[7] = {
 	2.6457513111, // square root of 7
 	3.3166247904  // square root of 11
 };
-static float MAX_HASH_DEPTH = 2.0;
+static double MAX_HASH_DEPTH = 2.0;
 static int HashLevelToSlots(int level) {return pow(4, level);}
 static int HashFunc(const gkn_map hash, const char *key) {
 	double sum = 0;
@@ -287,7 +287,7 @@ void gkn_map_set(gkn_map hash, const char *key, void *val) {
 	}
 
 	// check if we have to expand the hash
-	if ((float)hash->keys->size / (float)hash->slots >= MAX_HASH_DEPTH) {
+	if ((double)hash->keys->size / (double)hash->slots >= MAX_HASH_DEPTH) {
 		ExpandHash(hash);
 	}
 }
@@ -316,7 +316,7 @@ void gkn_map_stat(const gkn_map hash) {
 	}
 	fprintf(stdout, "HashStats: level=%d slots=%d keys=%d min=%d max=%d ave=%f\n",
 		 hash->level, hash->slots, hash->keys->size, min, max,
-		 (float)total / (float)hash->slots);
+		 (double)total / (double)hash->slots);
 }
 
 // text map

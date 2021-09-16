@@ -42,16 +42,16 @@ int      gkn_ivec_pop(gkn_ivec);
 
 // float vector
 struct gkn_FVEC {
-	float * elem;
-	int     size;
-	int     limit;
-	int     last;
+	double * elem;
+	int      size;
+	int      limit;
+	int      last;
 };
 typedef struct gkn_FVEC * gkn_fvec;
 void	 gkn_fvec_free(gkn_fvec);
 gkn_fvec gkn_fvec_new(void);
-void	 gkn_fvec_push(gkn_fvec, float);
-float    gkn_fvec_pop(gkn_fvec);
+void	 gkn_fvec_push(gkn_fvec, double);
+double   gkn_fvec_pop(gkn_fvec);
 
 // text vector
 struct gkn_TVEC {
