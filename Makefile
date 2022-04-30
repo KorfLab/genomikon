@@ -7,7 +7,6 @@ CFLAGS = -O2 -Wall -Werror
 OBJECTS = \
 	align.o\
 	feature.o\
-	hmm.o\
 	model.o\
 	sequence.o\
 	toolbox.o\
@@ -23,6 +22,12 @@ OBJ = testing.o
 default:
 	make $(ARC)
 	make $(APP)
+	cd dusty && make
+	cd hmmstar && make
+	cd isoformer && make
+	cd presti && make
+	cd smithy && make
+	cd wordy && make
 
 $(ARC): $(OBJECTS)
 	ar rvs $(ARC) $(OBJECTS)
@@ -32,18 +37,23 @@ $(APP): $(OBJ) $(OBJECTS)
 
 clean:
 	rm -f *.o $(APP) $(ARC)
-	cd demo && make clean
+	cd dusty && make clean
+	cd hmmstar && make clean
+	cd isoformer && make clean
+	cd presti && make clean
+	cd smithy && make clean
+	cd wordy && make clean
+
+test: $(ARC)
+	cd dusty && make test
+	cd hmmstar && make test
+	cd isoformer && make test
+	cd presti && make test
+	cd smithy && make test
+	cd wordy && make test
 
 depend: $(OBJECTS:.o=.c)
 	gcc -MM $^ > $@
-
-test: $(APP) $(ARC)
-	./testing -vec -ivec -fvec -tvec -map -tmap -smat -sw \
-		-pipe Makefile -fasta demo/777.fa -gff demo/777.gff\
-		-pwm demo/donor.pwm -mm demo/exon.mm -len demo/intron.len
-
-demo: $(ARC) $(APP)
-	cd demo && make
 
 # Inference Rules
 
