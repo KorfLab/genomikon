@@ -30,12 +30,11 @@ $(APP2): $(OBJ2) $(OBJECTS)
 $(APP3): $(OBJ3) $(OBJECTS)
 	$(CC) -o $(APP3) $(OBJ3) $(OBJECTS) $(LIB)
 
-
 test: $(APP1)
-	echo "test here"
+	perl test.pl
 
 clean:
-	rm -f *.o $(APP1) $(APP2)
+	rm -f *.o $(APP1) $(APP2) $(APP3)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
