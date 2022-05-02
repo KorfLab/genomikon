@@ -3,7 +3,8 @@ README for the Prestidigitizer
 
 Number stream classifier.
 
-## Background ##
+Background
+----------
 
 The Prestidigitizer, `presti`, is a classifier for streams of numbers. The
 original intent of the program is for peak finding in ChIP-seq-like data.
@@ -36,7 +37,8 @@ After running `presti`, it will tell you there are three regions:
 9       12      1
 ```
 
-## Tuning ##
+Tuning
+------
 
 * `-x` controls splitting vs. merging
 * `-y` controls the scale of numbers
@@ -55,7 +57,8 @@ The `-z` parameter limits the maximum size of a number, which is usually 999.
 Any value above `-z` gets converted to `-z`.
 
 
-## Model ##
+Model
+-----
 
 The `presty` hidden Markov model (HMM) is fully connected among all states. The
 transition probabilities for staying in the same state all have the same
