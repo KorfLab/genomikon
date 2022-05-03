@@ -24,8 +24,7 @@ $(APP): $(OBJ) $(OBJECTS)
 	$(CC) -o $(APP) $(OBJ) $(OBJECTS) $(LIB)
 
 test: $(APP)
-	./$(APP) values.txt 1 5 20
-	echo "proper test needed"
+	perl test.pl
 
 clean:
 	rm -f *.o $(APP)
