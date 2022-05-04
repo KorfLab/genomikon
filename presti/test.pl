@@ -7,9 +7,15 @@ my $sum = "cksum | cut -f1 -d ' '";
 my @TEST = (
 
 	{
-		name => "presti",
+		name => "presti match",
 		cli  => "./presti $TF 1 5 20 | $sum",
 		pass => "3219087707",
+	},
+
+	{
+		name => "presti binary",
+		cli  => "./presti $TF 1 2 4 8 16 | $sum",
+		pass => "3700284193",
 	},
 
 );
