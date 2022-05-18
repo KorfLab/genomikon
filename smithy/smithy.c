@@ -5,8 +5,8 @@
 #include "genomikon.h"
 
 static char *usage = "\
-sw - smith-waterman demo\n\n\
-usage: sw <string1> <string2>\n\
+smithy - smith-waterman\n\n\
+usage: smithy <string1> <string2>\n\
 ";
 
 int main(int argc, char **argv) {

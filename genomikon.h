@@ -3,7 +3,6 @@
 
 #include "align.h"
 #include "feature.h"
-#include "hmm.h"
 #include "model.h"
 #include "sequence.h"
 #include "toolbox.h"

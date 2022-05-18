@@ -1,93 +1,41 @@
 genomikon
 =========
 
-Genomic sequence analysis library primarily by Ian Korf.
+Genomic sequence analysis library and applications. Not intended to be used for
+large projects or lab projects. More like Ian's private/public C sandbox.
 
-## Philosophy ##
 
-+ Simple & Native
-+ Noob-friendly
-+ OOP-ish
+Installation
+------------
 
-### Simple & Native
-
-There aren't a whole bunch of typedefs that rename built-in types. DNA sequences
-are just strings. There is no Boolean type.
-
-### Noob-friendly
-
-The code is generally not overly sophisticated or brief. Verbosity in code is
-encouraged. Verbosity in comments is not. Let the compiler do the optimizations
-and let the coder read the code.
-
-## OOP-ish ##
-
-Every complex data structure, aka _object_, is a pointer to a struct. There is
-always a constructor function (generally named with `new` or `read`) that
-creates and initializes the object and a `free` function that destroys the
-object.
-
-### No side-effects
-
-There are no function side-effects. Everything going into a function is generally `const`. Everything coming back from a function is either a built-in type or an object (pointer to a struct).
-
-## Installation ##
-
-Just `make` from inside the `genomikon` directory to compile the library.
+Building the software is as simple as:
 
 	make
 
-If you want to build the demo apps, you can `make demo` or change to the `demo`
-directory and `make` from there.
+This will build the genomikon library and the applications below. To perform
+some functional tests, you can:
 
-The `testing` program is used to check for memory leaks and such. It's not
-necessary, but you can `make test` if you want.
+	make test
 
-## Core Functions ##
-
-### Vectors
-
-Vectors - dynamic arrays
-
-+ vec - void * vector
-+ ivec - integer vector
-+ fvec - double precisions floating point vector
-+ tvec - text vector
-
-### Maps
-
-Maps - dictionaries, hashes
-
-+ map - void * map
-+ tmap - text map
-
-### FASTA I/O
-
-### GFF I/O
-
-### Sequence Models
-
-+ pwm - position weight matrix
-+ mm - Markov model
-+ len - length model
-
-### Hidden Markov Models
-
-HMMs are defined by their states.
-
-### Command line processing
+The `testing` program in the main directory is used to check for memory leaks
+and is not part of the functional tests.
 
 
+Applications
+------------
 
-## Demo Programs ##
+There are several applications built with the genomikon library. Each of these
+has its own directory.
 
-There are a few demonstration programs in the `demo` directory.
++ dusty - a complexity filter for nucleotide sequences
++ isoformer - programs for generating alternative splicing isoforms
++ hmmstar - a viterbi decoder for nucleotide sequences and k-mer models
++ presti - an HMM for classifying integers (e.g. read coverage)
++ smithy - a simple implementation of Smith-Waterman
++ wordy - a word game that mixes boggle and genetic algorithms
 
-+ dusty - low complexity filter (CLI, fasta files)
-+ geney - gene scoring program (CLI, fasta, gff, models)
-+ smithy - Smith-Waterman alignment
-+ viterby - gene prediction
 
-## To Do ##
+Author
+------
 
-- add HMMs
+Ian Korf

@@ -105,7 +105,7 @@ static char *dust2(const gkn_fasta ff, int w, int t, int lc) {
 }
 
 static char *usage = "\
-dusty - low complexity demo\n\n\
+dusty - complexity filter\n\n\
 usage: dusty <file> [options]\n\
 options:\n\
   -w <int>    window size [11]\n\
