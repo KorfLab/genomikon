@@ -45,6 +45,7 @@ clean:
 	cd wordy && make clean
 
 test: $(ARC)
+	make
 	cd dusty && make test
 	cd hmmstar && make test
 	cd isoformer && make test
