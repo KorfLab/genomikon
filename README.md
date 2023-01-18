@@ -32,6 +32,7 @@ has its own directory.
 + hmmstar - a viterbi decoder for nucleotide sequences and k-mer models
 + presti - an HMM for classifying integers (e.g. read coverage)
 + smithy - a simple implementation of Smith-Waterman
++ viterby - a simple Viterbi decoder for HMMs specified in JSON
 + wordy - a word game that mixes boggle and genetic algorithms
 
 

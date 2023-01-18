@@ -54,4 +54,48 @@ void    gkn_len_free(gkn_len);
 gkn_len gkn_len_read(gkn_pipe/*, int*/);
 double  gkn_len_score(const gkn_len, int);
 
+// Hidden Markov model
+
+struct gkn_HMM {
+	char   *name;    // something descriptive
+	gkn_vec states;  // number of states in the model
+};
+typedef struct gkn_HMM * gkn_hmm;
+void    gkn_hmm_free(gkn_hmm);
+gkn_hmm gkn_hmm_read(gkn_pipe);
+
+struct gkn_STATE {
+	char   *name;        // exon, intron, whatever
+	double  init;        // initial probability
+	double  term;        // terminal probability
+	int     transitions; // number of states this connects out to
+	int     emissions;   // number of emission probs (4**n)
+	int     durations;   // number of optional duration probabilities
+	
+	gkn_map  trans; // map of transition probabilities to other states
+	gkn_mm   emits; // emission probabilities for Nth order MM
+	gkn_len  durs;  // optional length model
+};
+typedef struct gkn_STATE * gkn_state;
+void      gkn_state_free(gkn_state);
+gkn_state gkn_state_read(FILE *);
+void      gkn_state_write(FILE *, const gkn_state);
+
+struct gkn_DECODER {
+	char    *seq;        // sequence as read
+	gkn_hmm  hmm;        // hmm as read
+	double **transition; // transition probability matrix
+	double **vscore;     // viterbi score
+	int    **vtrace;     // viterbi trace
+	int    **vjumps;     // viterbi jumps
+	double **fscore;     // forward score
+	double **bscore;     // backward score
+};
+typedef struct gkn_DECODER * gkn_decoder;
+void        gkn_decoder_free(gkn_decoder);
+gkn_decoder gkn_decoder_new(const gkn_hmm, const char*);
+void        gkn_decoder_viteri(gkn_decoder);
+void        gkn_decoder_forward(gkn_decoder);
+void        gkn_decoder_backward(gkn_decoder);
+
 #endif
