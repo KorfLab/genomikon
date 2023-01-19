@@ -13,6 +13,7 @@
 
 static int COUNT = 100;
 void test_math(void);
+void test_seq(void);
 void test_vec(int);
 void test_ivec(int);
 void test_fvec(int);
@@ -61,6 +62,7 @@ int main(int argc, char ** argv) {
 	gkn_set_program_name(argv[0]);
 	gkn_register_option("-count", 1);
 	gkn_register_option("-math",  0);
+	gkn_register_option("-seq",   0);
 	gkn_register_option("-vec",   0);
 	gkn_register_option("-ivec",  0);
 	gkn_register_option("-fvec",  0);
@@ -88,6 +90,7 @@ int main(int argc, char ** argv) {
 	if (update < 2) update = 2;
 
 	if (gkn_option("-math"))  test_math();
+	if (gkn_option("-seq"))   test_seq();
 	if (gkn_option("-vec"))   test_vec(update);
 	if (gkn_option("-ivec"))  test_ivec(update);
 	if (gkn_option("-fvec"))  test_fvec(update);
@@ -114,6 +117,13 @@ void test_math() {
 	printf("math ");
 	printf("(%.2f %.2f %.2f) ", gkn_p2s(0), gkn_p2s(0.25), gkn_p2s(1));
 	printf("(%.2f)", pow(2.71828, gkn_sum2(log(0.375), log(0.125))));
+	printf(" done\n");
+}
+
+void test_seq() {
+	printf("seq ");
+	printf(" %d", gkn_ntindex("ACGT", 0, 3));
+	nt_index is backwards and should be gkn_idx2seq and gkn_seq2idx
 	printf(" done\n");
 }
 
