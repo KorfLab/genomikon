@@ -12,7 +12,8 @@
 #include "toolbox.h"
 
 static int COUNT = 100;
-void test_vec();
+void test_math(void);
+void test_vec(int);
 void test_ivec(int);
 void test_fvec(int);
 void test_tvec(int);
@@ -36,6 +37,7 @@ void test_this(void);
 static char usage[] = "\
 usage: testing [options]\n\
 options:\n\
+  -math\n\
   -vec -ivec -fvec -tvec -map -tmap -xtree\n\
   -feat -smat -sw\n\
   -pipe  <file>\n\
@@ -58,6 +60,7 @@ int main(int argc, char ** argv) {
 	/* options */
 	gkn_set_program_name(argv[0]);
 	gkn_register_option("-count", 1);
+	gkn_register_option("-math",  0);
 	gkn_register_option("-vec",   0);
 	gkn_register_option("-ivec",  0);
 	gkn_register_option("-fvec",  0);
@@ -84,6 +87,7 @@ int main(int argc, char ** argv) {
 	int update = (int)((double)COUNT/50);
 	if (update < 2) update = 2;
 
+	if (gkn_option("-math"))  test_math();
 	if (gkn_option("-vec"))   test_vec(update);
 	if (gkn_option("-ivec"))  test_ivec(update);
 	if (gkn_option("-fvec"))  test_fvec(update);
@@ -104,6 +108,13 @@ int main(int argc, char ** argv) {
 	if (gkn_option("-this"))  test_this();
 
 	return 0;
+}
+
+void test_math() {
+	printf("math ");
+	printf("(%.2f %.2f %.2f) ", gkn_p2s(0), gkn_p2s(0.25), gkn_p2s(1));
+	printf("(%.2f)", pow(2.71828, gkn_sum2(log(0.375), log(0.125))));
+	printf(" done\n");
 }
 
 void test_vec(int update) {

@@ -11,7 +11,8 @@
 
 // Utilities
 
-double gkn_p2s(double);
+double gkn_p2s(double);          // probability to score
+double gkn_sum2(double, double); // sum 2 values in log space
 
 // Position Weight Matrix
 
@@ -71,7 +72,7 @@ struct gkn_STATE {
 	int     transitions; // number of states this connects out to
 	int     emissions;   // number of emission probs (4**n)
 	int     durations;   // number of optional duration probabilities
-	
+
 	gkn_map  trans; // map of transition probabilities to other states
 	gkn_mm   emits; // emission probabilities for Nth order MM
 	gkn_len  durs;  // optional length model
