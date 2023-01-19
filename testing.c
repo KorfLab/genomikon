@@ -122,8 +122,8 @@ void test_math() {
 
 void test_seq() {
 	printf("seq ");
-	printf(" %d", gkn_ntindex("ACGT", 0, 3));
-	nt_index is backwards and should be gkn_idx2seq and gkn_seq2idx
+	printf(" %d %d %s %s", gkn_mem2idx("TAA", 0, 3), gkn_str2idx("TTT"),
+		gkn_idx2str(48, 3), gkn_idx2str(63, 4));
 	printf(" done\n");
 }
 

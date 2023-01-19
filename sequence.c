@@ -24,6 +24,40 @@ int gkn_ntindex(const char *seq, int off, int k) {
 	return idx;
 }
 
+int gkn_mem2idx(const char *seq, int off, int len) {
+	int idx = 0;
+	for (int i = 0; i < len; i++) {
+		switch (seq[off+i]) {
+			case 'A': case 'a': idx += pow(4, (len -i -1)) * 0; break;
+			case 'C': case 'c': idx += pow(4, (len -i -1)) * 1; break;
+			case 'G': case 'g': idx += pow(4, (len -i -1)) * 2; break;
+			case 'T': case 't': idx += pow(4, (len -i -1)) * 3; break;
+			default: return -1;
+		}
+	}
+	return idx;
+}
+
+int gkn_str2idx(const char *str) {
+	return gkn_mem2idx(str, 0, strlen(str));
+}
+
+char * gkn_idx2str(int val, int len) {
+	char dna[4] = "ACGT";
+	char *str = malloc(len + 1);
+	for (int i = 0; i < len; i++) {
+		int max = pow(4, (len-i-1));
+		int r = 0;
+		if (val > max -1) {
+			r = val / max;
+			val -= r * max;
+		}
+		str[i] = dna[r];
+	}
+	return str;
+}
+
+
 char * gkn_revcomp (const char *seq) {
 	int length = strlen(seq);
 	char *str = gkn_malloc(length +1);

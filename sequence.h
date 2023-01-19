@@ -11,6 +11,9 @@
 
 // Utilities
 int    gkn_ntindex(const char *, int, int);
+int    gkn_mem2idx(const char *, int, int);
+int    gkn_str2idx(const char *);
+char * gkn_idx2str(int, int);
 char * gkn_revcomp(const char*);
 
 // FASTA file
