@@ -15,7 +15,7 @@ double gkn_p2s(double p) {
 }
 
 double gkn_sum2(double a, double b) {
-	if (abs(a - b) > 20) return (a > b) ? a : b;
+	if (fabs(a - b) > 20) return (a > b) ? a : b;
 	return (log(1 + pow(2.7182818, b-a)) + a);
 }
 
