@@ -10,20 +10,6 @@
 
 // Utilities
 
-int gkn_ntindex(const char *seq, int off, int k) {
-	int idx = 0;
-	for (int i = 0; i < k; i++) {
-		switch (seq[off+i]) {
-			case 'A': case 'a': idx += pow(4, (k -i -1)) * 0; break;
-			case 'C': case 'c': idx += pow(4, (k -i -1)) * 1; break;
-			case 'G': case 'g': idx += pow(4, (k -i -1)) * 2; break;
-			case 'T': case 't': idx += pow(4, (k -i -1)) * 3; break;
-			default: return -1;
-		}
-	}
-	return idx;
-}
-
 int gkn_mem2idx(const char *seq, int off, int len) {
 	int idx = 0;
 	for (int i = 0; i < len; i++) {

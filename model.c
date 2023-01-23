@@ -102,7 +102,7 @@ gkn_mm gkn_mm_read(gkn_pipe io) {
 			score = malloc(sizeof(double) * size);
 			free(line);
 		} else if (sscanf(line, "%s %lf", kmer, &p) == 2) {
-			int idx = gkn_ntindex(kmer, 0, strlen(kmer));
+			int idx = gkn_str2idx(kmer);
 			if (idx == -1) gkn_exit("alphabet error in: %s", kmer);
 			score[idx] = gkn_p2s(p);
 			free(line);
@@ -125,7 +125,7 @@ double gkn_mm_score(const gkn_mm mm, const char *seq, int pos, int end) {
 	double p = 0;
 	if (pos < mm->k) pos = mm->k;
 	for (int i = pos; i < end - mm->k +2; i++) {
-		int idx = gkn_ntindex(seq, i, mm->k);
+		int idx = gkn_mem2idx(seq, i, mm->k);
 		if (idx != -1) p += mm->score[idx];
 	}
 	return p;
@@ -136,7 +136,7 @@ double * gkn_mm_cache(const gkn_mm mm, const char *seq) {
 	double *score = malloc(sizeof(double) * len);
 	for (int i = 0; i < mm->k; i++) score[i] = 0;
 	for (int i = mm->k; i < len; i++) {
-		int idx = gkn_ntindex(seq, i, mm->k);
+		int idx = gkn_mem2idx(seq, i, mm->k);
 		if (idx == -1) score[i] = score[i-1];
 		else           score[i] = score[i-1] + mm->score[idx];
 	}
@@ -151,7 +151,7 @@ double gkn_mm_score_cache(const gkn_mm mm, const double *v, int beg, int end) {
 
 static double find_tail(double val, int x) {
 	double lo = 0;
-	double hi = 1000;
+	double hi = 1000; // maybe param
 	double m;
 
 	while (hi - lo > 1) {
