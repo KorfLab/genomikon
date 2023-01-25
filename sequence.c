@@ -31,6 +31,7 @@ int gkn_str2idx(const char *str) {
 char * gkn_idx2str(int val, int len) {
 	char dna[4] = "ACGT";
 	char *str = malloc(len + 1);
+	str[len] = '\0';
 	for (int i = 0; i < len; i++) {
 		int max = pow(4, (len-i-1));
 		int r = 0;
