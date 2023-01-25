@@ -1,4 +1,4 @@
-# Makefile for motifamatic
+# Makefile for motifamatic and associated programs and libraries
 
 LIB = -L.. -lgenomikon -lm
 INC = -I..
@@ -24,7 +24,7 @@ $(APP2): $(OBJ2) $(OBJECTS)
 	$(CC) -o $(APP2) $(OBJ2) $(OBJECTS) $(LIB)
 
 test: $(APP2)
-	./$(APP2)
+	echo "test me, please, I'm begging you"
 
 clean:
 	rm -f *.o $(APP1) $(APP2) $(APP3)

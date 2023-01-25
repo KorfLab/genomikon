@@ -25,6 +25,7 @@ default:
 	cd dusty && make
 	cd hmmstar && make
 	cd isoformer && make
+	cd motifamatic && make
 	cd presti && make
 	cd smithy && make
 	cd wordy && make
@@ -40,6 +41,7 @@ clean:
 	cd dusty && make clean
 	cd hmmstar && make clean
 	cd isoformer && make clean
+	cd motifamatic && make clean
 	cd presti && make clean
 	cd smithy && make clean
 	cd wordy && make clean
@@ -49,6 +51,7 @@ test: $(ARC)
 	cd dusty && make test
 	cd hmmstar && make test
 	cd isoformer && make test
+	cd motifamatic && make test
 	cd presti && make test
 	cd smithy && make test
 	cd wordy && make test
