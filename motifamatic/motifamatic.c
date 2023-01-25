@@ -1,7 +1,7 @@
 #include "genomikon.h"
 
 static char *usage = "\
-motifamatic - find motifs by enumerating all possibles (within reason)\n\n\
+motifamatic - find motifs by enumerating digitized representations\n\n\
 usage: motifamatic <fasta file> [options]\n\
 options:\n\
   --len <int>   motif length [6]\n\
@@ -25,19 +25,23 @@ double P2 = 0.48;
 double p1 = 0.85;
 double p2 = 0.40;
 
-static char * num2str(int num, int len, int mod) {
-	char *str = malloc(len + 1);
-	char *src = NULL;
-	switch (mod) {
-		case 4:  src = S4;  break;
-		case 5:  src = S5;  break;
-		case 6:  src = S6;  break;
-		case 7:  src = S7;  break;
-		case 11: src = S11; break;
-		case 15: src = S15; break;
-		case 21: src = S21; break;
+static char *num2mod(int num) {
+	switch (num) {
+		case 4:  return S4;  break;
+		case 5:  return S5;  break;
+		case 6:  return S6;  break;
+		case 7:  return S7;  break;
+		case 11: return S11; break;
+		case 15: return S15; break;
+		case 21: return S21; break;
 		default: gkn_exit("impossible");
 	}
+	return NULL;
+}
+
+static char * num2str(int num, int len, int mod) {
+	char *str = malloc(len + 1);
+	char *src = num2mod(mod);
 
 	str[len] = '\0';
 	for (int i = 0; i < len; i++) {
@@ -86,7 +90,8 @@ int main(int argc, char **argv) {
 	if (gkn_option("--p1"))  p1  = atof(gkn_option("--p1"));
 	if (gkn_option("--p2"))  p2  = atof(gkn_option("--p2"));
 
-	fprintf(stderr, "%.0f possible motifs\n", pow(mod, len));
+	fprintf(stderr, "%.0f possible motifs of length %d in alphabet %s\n",
+		pow(mod, len), len, num2mod(mod));
 
 	// find isoforms (just one fasta file entry)
 	io = gkn_pipe_open(file, "r");
