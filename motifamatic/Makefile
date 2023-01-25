@@ -5,18 +5,26 @@ INC = -I..
 CC = gcc
 CFLAGS = -O2 -Wall -Werror
 
-OBJECTS =
+OBJECTS = dmg.o
 
 APP1 = motifamatic
 OBJ1 = motifamatic.o
 
+APP2 = dmgtest
+OBJ2 = dmgtest.o
+
 default:
 	make $(APP1)
+	make $(APP2)
 
 $(APP1): $(OBJ1) $(OBJECTS)
 	$(CC) -o $(APP1) $(OBJ1) $(OBJECTS) $(LIB)
 
-test: $(APP1)
+$(APP2): $(OBJ2) $(OBJECTS)
+	$(CC) -o $(APP2) $(OBJ2) $(OBJECTS) $(LIB)
+
+test: $(APP2)
+	./$(APP2)
 
 clean:
 	rm -f *.o $(APP1) $(APP2) $(APP3)
