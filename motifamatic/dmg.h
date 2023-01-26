@@ -27,7 +27,8 @@ struct discrete_motif_generator {
 };
 typedef struct discrete_motif_generator * dmgen;
 void dmgen_free(dmgen);
-dmgen dmgen_new(int, double, double, double, double, double, double);
+dmgen dmgen_new(int);
+dmgen dmgen_new_custom(int, double, double, double, double, double, double);
 
 char * num2str(dmgen, int, int);
 gkn_pwm num2pwm(dmgen, int, int);

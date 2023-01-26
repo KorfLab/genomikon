@@ -1,3 +1,4 @@
+
 #include "genomikon.h"
 #include "dmg.h"
 
@@ -6,11 +7,13 @@ motifamatic - find motifs by enumerating digitized representations\n\n\
 usage: motifamatic <fasta file> [options]\n\
 options:\n\
   --len <int>   motif length [6]\n\
-  --sig <int>   motif signature number: 4, 5, 8, 9, 15, 19, 25 [4]\n\
-  --P1  <float> uppercase single letter probability [0.97]\n\
-  --P2  <float> uppercase double letter probability [0.48]\n\
-  --p1  <float> lowercase single letter probability [0.85]\n\
-  --p2  <float> lowercase double letter probability [0.40]\n\
+  --sig <int>   motif signature number: 4, 5, 9, 11, 15, 19, 25, 31 [4]\n\
+  --P1  <float> uppercase single letter probability [0.970]\n\
+  --P2  <float> uppercase double letter probability [0.480]\n\
+  --32  <float> uppercase triple letter probability [0.333]\n\
+  --p1  <float> lowercase single letter probability [0.900]\n\
+  --p2  <float> lowercase double letter probability [0.400]\n\
+  --p2  <float> lowercase double letter probability [0.300]\n\
 ";
 
 // p-value cutoffs for finding motifs
@@ -26,7 +29,7 @@ int main(int argc, char **argv) {
 	double P2 = 0.480;
 	double P3 = 0.333;
 	double p1 = 0.900;
-	double p2 = 0.450;
+	double p2 = 0.400;
 	double p3 = 0.300;
 
 	gkn_pipe  io = NULL; // for reading fasta files
@@ -56,8 +59,8 @@ int main(int argc, char **argv) {
 	if (gkn_option("--p2"))  p2  = atof(gkn_option("--p2"));
 	if (gkn_option("--p3"))  p3  = atof(gkn_option("--p3"));
 
-	dmgen dmg = dmgen_new(sig, P1, P2, P3, p1, p2, p3);
-	printf("%d %s %s\n", dmg->sig, dmg->alph, num2str(dmg, 25, 4));
+	dmgen dmg = dmgen_new_custom(sig, P1, P2, P3, p1, p2, p3);
+	printf("%d %d %s %s\n", len, dmg->sig, dmg->alph, num2str(dmg, 25, 4));
 
 
 

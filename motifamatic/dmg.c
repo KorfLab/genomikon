@@ -11,18 +11,23 @@
 
 static const char *S4  = "ACGT";
 static const char *S5  = "ACGTN";
-static const char *S8  = "ACGTacgt";
 static const char *S9  = "ACGTacgtN";
+static const char *S11 = "ACGTRYMKWSN";
 static const char *S15 = "ACGTRYMKWSBDHVN";
-static const char *S19 = "ACGTRYMKWSBDHVNacgt";
-static const char *S25 = "ACGTRYMKWSBDHVNacgtrymkws";
+static const char *S19 = "ACGTRYMKWSBDHVacgtN";
+static const char *S25 = "ACGTRYMKWSBDHVacgtrymkwsN";
+static const char *S31 = "ACGTRYMKWSBDHVacgtrymkwsbdhvN";
 
 void dmgen_free(dmgen dmg) {
 	free(dmg->alph);
 	free(dmg);
 }
 
-dmgen dmgen_new(int sig,
+dmgen dmgen_new(int sig) {
+	return dmgen_new_custom(sig, 0.970, 0.480, 0.333, 0.9, 0.4, 0.3);
+}
+
+dmgen dmgen_new_custom(int sig,
 		double P1, double P2, double P3,
 		double p1, double p2, double p3) {
 	dmgen dmg = malloc(sizeof(struct discrete_motif_generator));
@@ -31,14 +36,15 @@ dmgen dmgen_new(int sig,
 	switch (sig) {
 		case 4:  strcpy(dmg->alph, S4);  break;
 		case 5:  strcpy(dmg->alph, S5);  break;
-		case 8:  strcpy(dmg->alph, S8);  break;
 		case 9:  strcpy(dmg->alph, S9);  break;
+		case 11: strcpy(dmg->alph, S11); break;
 		case 15: strcpy(dmg->alph, S15); break;
 		case 19: strcpy(dmg->alph, S19); break;
 		case 25: strcpy(dmg->alph, S25); break;
+		case 31: strcpy(dmg->alph, S31); break;
 		default: gkn_exit("illegal sig: %d\n", sig);
 	}
-	
+
 	dmg->P1 = P1;
 	dmg->P2 = P2;
 	dmg->P3 = P3;
@@ -51,7 +57,8 @@ dmgen dmgen_new(int sig,
 	dmg->q1 = (1 - p1) / 3;
 	dmg->q2 = (1 - 2*p2) / 2;
 	dmg->q3 = (1 - 3*p3) / 3;
-	
+	dmg->N4 = 0.25;
+
 	return dmg;
 }
 
@@ -127,8 +134,7 @@ gkn_pwm num2pwm(dmgen dmg, int num, int len) {
 		default: gkn_exit("impossible");
 		}
 	}
-	
-	
+
 	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
 	char name[64];
 	sprintf(name, "%s-%d-%s", dmg->alph, num, str);
@@ -136,9 +142,9 @@ gkn_pwm num2pwm(dmgen dmg, int num, int len) {
 	strcpy(model->name, name);
 	model->size = len;
 	model->score = pwm;
-	
+
 	free(str);
-	
+
 	return model;
 }
 
