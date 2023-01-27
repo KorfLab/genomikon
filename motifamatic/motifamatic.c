@@ -3,17 +3,24 @@
 #include "dmg.h"
 
 static char *usage = "\
-motifamatic - find motifs by enumerating digitized representations\n\n\
-usage: motifamatic <fasta file> [options]\n\
+usage: motifamatic [options]\n\
 options:\n\
-  --len <int>   motif length [6]\n\
-  --sig <int>   motif signature number: 4, 5, 9, 11, 15, 19, 25, 29 [4]\n\
-  --P1  <float> uppercase single letter probability [0.997]\n\
-  --P2  <float> uppercase double letter probability [0.498]\n\
-  --32  <float> uppercase triple letter probability [0.333]\n\
-  --p1  <float> lowercase single letter probability [0.800]\n\
-  --p2  <float> lowercase double letter probability [0.400]\n\
-  --p2  <float> lowercase double letter probability [0.300]\n\
+  --find-motifs\n\
+    --seq <fasta>\n\
+    --len <int>   motif length [6]\n\
+    --sig <int>   motif alphabet: 4, 5, 9, 11, 15, 19, 25, 29 [4]\n\
+    --mod <...>   not sure yet...\n\
+    --ref         refine motifs\n\
+    --P1  <float> uppercase single letter probability [0.997]\n\
+    --P2  <float> uppercase double letter probability [0.498]\n\
+    --P3  <float> uppercase triple letter probability [0.333]\n\
+    --p1  <float> lowercase single letter probability [0.800]\n\
+    --p2  <float> lowercase double letter probability [0.400]\n\
+    --p2  <float> lowercase double letter probability [0.300]\n\
+  --score-motifs\n\
+    --seq <fasta file>\n\
+    --mot <motif file>\n\
+    --mod <...>\n\
 ";
 
 // p-value cutoffs for finding motifs
