@@ -45,19 +45,19 @@ dmgen dmgen_new_custom(int sig,
 		default: gkn_exit("illegal sig: %d\n", sig);
 	}
 
-	dmg->P1 = P1;
-	dmg->P2 = P2;
-	dmg->P3 = P3;
-	dmg->p1 = p1;
-	dmg->p2 = p2;
-	dmg->p3 = p3;
-	dmg->Q1 = (1 - P1) / 3;
-	dmg->Q2 = (1 - 2*P2) / 2;
-	dmg->Q3 = (1 - 3*P3) / 3;
-	dmg->q1 = (1 - p1) / 3;
-	dmg->q2 = (1 - 2*p2) / 2;
-	dmg->q3 = (1 - 3*p3) / 3;
-	dmg->N4 = 0.25;
+	dmg->P1 = gkn_p2s(P1);
+	dmg->P2 = gkn_p2s(P2);
+	dmg->P3 = gkn_p2s(P3);
+	dmg->p1 = gkn_p2s(p1);
+	dmg->p2 = gkn_p2s(p2);
+	dmg->p3 = gkn_p2s(p3);
+	dmg->Q1 = gkn_p2s((1 - P1) / 3);
+	dmg->Q2 = gkn_p2s((1 - 2 * P2) / 2);
+	dmg->Q3 = gkn_p2s((1 - 3 * P3) / 3);
+	dmg->q1 = gkn_p2s((1 - p1) / 3);
+	dmg->q2 = gkn_p2s((1 - 2 * p2) / 2);
+	dmg->q3 = gkn_p2s((1 - 3 * p3) / 3);
+	dmg->N4 =gkn_p2s(0.25);
 
 	return dmg;
 }
@@ -145,6 +145,51 @@ gkn_pwm num2pwm(dmgen dmg, int num, int len) {
 
 	free(str);
 
+	return model;
+}
+
+double score_motif(const char *seq, gkn_pwm pwm, int mod) {
+	return 3.14;
+}
+
+gkn_pwm background_model(gkn_vec seqs, int len) {
+	int a = 0;
+	int c = 0;
+	int g = 0;
+	int t = 0;
+	int total = 0;
+	for (int i = 0; i < seqs->size; i++) {
+		gkn_fasta ff = seqs->elem[i];
+		int seqlen = strlen(ff->seq);
+		total += seqlen;
+		for (int j = 0; j < seqlen; j++) {
+			switch (ff->seq[j]) {
+				case 'A': a++; break;
+				case 'C': c++; break;
+				case 'G': g++; break;
+				case 'T': t++; break;
+			}
+		}
+	}
+	
+	double ** pwm = malloc(sizeof(double*) * len);
+	for (int i = 0; i < len; i++) {
+		pwm[i] = malloc(sizeof(double) * 4);
+	}
+	for (int i = 0; i < len; i++) {
+		pwm[i][0] = gkn_p2s((double)a/total);
+		pwm[i][1] = gkn_p2s((double)c/total);
+		pwm[i][2] = gkn_p2s((double)g/total);
+		pwm[i][3] = gkn_p2s((double)t/total);
+	}
+	
+	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
+	char *name = "background";
+	model->name = malloc(strlen(name)+1);
+	strcpy(model->name, name);
+	model->size = len;
+	model->score = pwm;
+	
 	return model;
 }
 

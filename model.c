@@ -14,6 +14,11 @@ double gkn_p2s(double p) {
 	return log(p/0.25);
 }
 
+double gkn_s2p(double s) {
+	if (s < -100) return 0.0;
+	return 0.25 * pow(2.7182818, s);
+}
+
 double gkn_sum2(double a, double b) {
 	if (fabs(a - b) > 20) return (a > b) ? a : b;
 	return (log(1 + pow(2.7182818, b-a)) + a);
@@ -65,6 +70,16 @@ gkn_pwm gkn_pwm_read(gkn_pipe io) {
 	model->score = score;
 
 	return model;
+}
+
+void gkn_pwm_write(gkn_pwm model, FILE *fp) {
+	fprintf(fp, "%% PWM %s %d\n", model->name, model->size);
+	for (int i = 0; i < model->size; i++) {
+		for (int j = 0; j < 4; j++) {
+			fprintf(fp, "%.6f ", gkn_s2p(model->score[i][j]));
+		}
+		fprintf(fp, "\n");
+	}
 }
 
 double gkn_pwm_score(const gkn_pwm pwm, const char *seq, int pos) {
@@ -119,6 +134,10 @@ gkn_mm gkn_mm_read(gkn_pipe io) {
 	model->score = score;
 
 	return model;
+}
+
+void gkn_mm_write(gkn_mm model, FILE *fp) {
+	// not implemented yet
 }
 
 double gkn_mm_score(const gkn_mm mm, const char *seq, int pos, int end) {
@@ -208,6 +227,10 @@ gkn_len gkn_len_read(gkn_pipe io) {
 	}
 
 	return model;
+}
+
+void gkn_len_write(gkn_len model, FILE *fp) {
+	// not implemented yet
 }
 
 double gkn_len_score(const gkn_len len, int x) {

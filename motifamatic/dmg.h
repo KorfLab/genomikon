@@ -33,4 +33,7 @@ dmgen dmgen_new_custom(int, double, double, double, double, double, double);
 char * num2str(dmgen, int, int);
 gkn_pwm num2pwm(dmgen, int, int);
 
+double score_motif(const char *, gkn_pwm, int);
+gkn_pwm background_model(gkn_vec, int);
+
 #endif

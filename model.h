@@ -12,6 +12,7 @@
 // Utilities
 
 double gkn_p2s(double);          // probability to score
+double gkn_s2p(double);          // score to probability
 double gkn_sum2(double, double); // sum 2 values in log space
 
 // Position Weight Matrix
@@ -24,6 +25,7 @@ struct gkn_PWM {
 typedef struct gkn_PWM * gkn_pwm;
 void    gkn_pwm_free(gkn_pwm);
 gkn_pwm gkn_pwm_read(gkn_pipe);
+void    gkn_pwm_write(gkn_pwm, FILE *);
 double  gkn_pwm_score(const gkn_pwm, const char *, int);
 
 // Markov model
@@ -37,6 +39,7 @@ struct gkn_MM {
 typedef struct gkn_MM * gkn_mm;
 void     gkn_mm_free(gkn_mm);
 gkn_mm   gkn_mm_read(gkn_pipe);
+void     gkn_mm_write(gkn_mm, FILE *);
 double   gkn_mm_score(const gkn_mm, const char *, int, int);
 double * gkn_mm_cache(const gkn_mm, const char *);
 double   gkn_mm_score_cache(const gkn_mm, const double *, int, int);
@@ -53,6 +56,7 @@ struct gkn_LEN {
 typedef struct gkn_LEN * gkn_len;
 void    gkn_len_free(gkn_len);
 gkn_len gkn_len_read(gkn_pipe/*, int*/);
+void    gkn_len_write(gkn_len, FILE *);
 double  gkn_len_score(const gkn_len, int);
 
 // Hidden Markov model
