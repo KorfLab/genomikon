@@ -16,7 +16,7 @@ void dump_pwm(gkn_pwm pwm) {
 
 int main(int argc, char **argv) {
 	int n = 0;
-	int sigs[8] = {4, 5, 9, 11, 15, 19, 25, 31};
+	int sigs[8] = {4, 5, 9, 11, 15, 19, 25, 29};
 
 	if (argc != 2) {
 		fprintf(stderr, "%s\n", usage);
@@ -26,16 +26,13 @@ int main(int argc, char **argv) {
 	n = atoi(argv[1]);
 
 	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < 7; j++) {
+		for (int j = 0; j < 8; j++) {
 			int sig = sigs[j];
 			dmgen dmg = dmgen_new(sig);
-			for (int w = 1; w < 4; w++) {
-				int limit = (int)pow(sig, w);
-				for (int x = 0; x < limit; x++) {
-					gkn_pwm pwm = num2pwm(dmg, x, w);
-					dump_pwm(pwm);
-					gkn_pwm_free(pwm);
-				}
+			for (int x = 0; x < sig; x++) {
+				gkn_pwm pwm = num2pwm(dmg, x, 1);
+				dump_pwm(pwm);
+				gkn_pwm_free(pwm);
 			}
 			dmgen_free(dmg);
 		}

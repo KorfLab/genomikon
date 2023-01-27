@@ -7,11 +7,11 @@ motifamatic - find motifs by enumerating digitized representations\n\n\
 usage: motifamatic <fasta file> [options]\n\
 options:\n\
   --len <int>   motif length [6]\n\
-  --sig <int>   motif signature number: 4, 5, 9, 11, 15, 19, 25, 31 [4]\n\
-  --P1  <float> uppercase single letter probability [0.970]\n\
-  --P2  <float> uppercase double letter probability [0.480]\n\
+  --sig <int>   motif signature number: 4, 5, 9, 11, 15, 19, 25, 29 [4]\n\
+  --P1  <float> uppercase single letter probability [0.997]\n\
+  --P2  <float> uppercase double letter probability [0.498]\n\
   --32  <float> uppercase triple letter probability [0.333]\n\
-  --p1  <float> lowercase single letter probability [0.900]\n\
+  --p1  <float> lowercase single letter probability [0.800]\n\
   --p2  <float> lowercase double letter probability [0.400]\n\
   --p2  <float> lowercase double letter probability [0.300]\n\
 ";
@@ -25,10 +25,10 @@ int main(int argc, char **argv) {
 	char *file = NULL;
 	int   len = 6;
 	int   sig = 4;
-	double P1 = 0.970;
-	double P2 = 0.480;
+	double P1 = 0.997;
+	double P2 = 0.498;
 	double P3 = 0.333;
-	double p1 = 0.900;
+	double p1 = 0.800;
 	double p2 = 0.400;
 	double p3 = 0.300;
 

@@ -16,7 +16,7 @@ static const char *S11 = "ACGTRYMKWSN";
 static const char *S15 = "ACGTRYMKWSBDHVN";
 static const char *S19 = "ACGTRYMKWSBDHVacgtN";
 static const char *S25 = "ACGTRYMKWSBDHVacgtrymkwsN";
-static const char *S31 = "ACGTRYMKWSBDHVacgtrymkwsbdhvN";
+static const char *S29 = "ACGTRYMKWSBDHVacgtrymkwsbdhvN";
 
 void dmgen_free(dmgen dmg) {
 	free(dmg->alph);
@@ -24,7 +24,7 @@ void dmgen_free(dmgen dmg) {
 }
 
 dmgen dmgen_new(int sig) {
-	return dmgen_new_custom(sig, 0.970, 0.480, 0.333, 0.9, 0.4, 0.3);
+	return dmgen_new_custom(sig, 0.997, 0.498, 0.333, 0.8, 0.4, 0.3);
 }
 
 dmgen dmgen_new_custom(int sig,
@@ -41,7 +41,7 @@ dmgen dmgen_new_custom(int sig,
 		case 15: strcpy(dmg->alph, S15); break;
 		case 19: strcpy(dmg->alph, S19); break;
 		case 25: strcpy(dmg->alph, S25); break;
-		case 31: strcpy(dmg->alph, S31); break;
+		case 29: strcpy(dmg->alph, S29); break;
 		default: gkn_exit("illegal sig: %d\n", sig);
 	}
 

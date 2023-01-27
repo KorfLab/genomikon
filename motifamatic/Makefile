@@ -24,7 +24,7 @@ $(APP2): $(OBJ2) $(OBJECTS)
 	$(CC) -o $(APP2) $(OBJ2) $(OBJECTS) $(LIB)
 
 test: $(APP2)
-	echo "test me, please, I'm begging you"
+	perl test.pl
 
 clean:
 	rm -f *.o $(APP1) $(APP2) $(APP3)

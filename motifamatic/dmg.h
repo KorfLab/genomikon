@@ -9,19 +9,19 @@
 #include "genomikon.h"
 
 struct discrete_motif_generator {
-	int    sig;  // alphabet signature: 4, 5, 8, 9, 15, 19, 25
+	int    sig;  // alphabet signature: 4, 5, 9, 15, 19, 25, 29
 	char  *alph; // alphabet (copied, needs freeing)
-	double P1;   // uppercase single value, eg. A = 0.970
-	double P2;   // uppercase double value, eg. R = 0.480
-	double P3;   // uppercase triple value, eg. B = 0.333
-	double p1;   // lowercase single value, eg. a = 0.900
-	double p2;   // lowercase double value, eg. r = 0.450
-	double p3;   // lowercase triple value, eg. b = 0.300
+	double P1;   // uppercase single value
+	double P2;   // uppercase double value
+	double P3;   // uppercase triple value
+	double p1;   // lowercase single value
+	double p2;   // lowercase double value
+	double p3;   // lowercase triple value
 	double N4;   // 0.25 each
-	double Q1;   // remaining values e.g. C = 0.01, G = 0.01, T = 0.01
-	double Q2;   // etc
-	double Q3;
-	double q1;
+	double Q1;   // remaining single values (1-P)/3
+	double Q2;   // reamining double values (1-2P)/2
+	double Q3;   // reamining triple value (1-3p)
+	double q1;   // etc for lowercase
 	double q2;
 	double q3;
 };
