@@ -8,8 +8,8 @@ my @TEST = (
 
 	{
 		name => "dmgtest",
-		cli  => "./dmgtest $TF 1 | $sum",
-		pass => "1038867243",
+		cli  => "./dmgtest $TF 3 1 | $sum",
+		pass => "361426876",
 	},
 
 );

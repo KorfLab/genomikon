@@ -7,11 +7,11 @@ CFLAGS = -O2 -Wall -Werror
 
 OBJECTS = dmg.o
 
-APP1 = motifamatic
-OBJ1 = motifamatic.o
+APP1 = dmgtest
+OBJ1 = dmgtest.o
 
-APP2 = dmgtest
-OBJ2 = dmgtest.o
+APP2 = motifamatic
+OBJ2 = motifamatic.o
 
 default:
 	make $(APP1)
@@ -23,7 +23,7 @@ $(APP1): $(OBJ1) $(OBJECTS)
 $(APP2): $(OBJ2) $(OBJECTS)
 	$(CC) -o $(APP2) $(OBJ2) $(OBJECTS) $(LIB)
 
-test: $(APP2)
+test: $(APP1)
 	perl test.pl
 
 clean:
