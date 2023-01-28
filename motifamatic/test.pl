@@ -9,7 +9,7 @@ my @TEST = (
 	{
 		name => "dmgtest",
 		cli  => "./dmgtest $TF 3 1 | $sum",
-		pass => "2151333787",
+		pass => "2050236807",
 	},
 
 );

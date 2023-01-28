@@ -4,7 +4,6 @@
 static char *usage = "usage: dmgtest <size of motif> <number of tests>";
 
 int main(int argc, char **argv) {
-	int sigs[8] = {4, 5, 9, 11, 15, 19, 25, 29};
 
 	if (argc != 3) {
 		fprintf(stderr, "%s\n", usage);
@@ -16,8 +15,8 @@ int main(int argc, char **argv) {
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < 8; j++) {
-			int sig = sigs[j];
-			dmgen dmg = dmgen_new(sig);
+			dmgen dmg = dmgen_new(j);
+			int sig = strlen(dmg->alph);
 			int limit = (int)pow(sig, s);
 			for (int x = 0; x < limit; x++) {
 				gkn_pwm pwm = num2pwm(dmg, x, s);

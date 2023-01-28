@@ -9,40 +9,40 @@
 #include "genomikon.h"
 #include "dmg.h"
 
-static const char *S4  = "ACGT";
-static const char *S5  = "ACGTN";
-static const char *S9  = "ACGTacgtN";
-static const char *S11 = "ACGTRYMKWSN";
-static const char *S15 = "ACGTRYMKWSBDHVN";
-static const char *S19 = "ACGTRYMKWSBDHVacgtN";
-static const char *S25 = "ACGTRYMKWSBDHVacgtrymkwsN";
-static const char *S29 = "ACGTRYMKWSBDHVacgtrymkwsbdhvN";
+static const char *NT40 = "ACGT";
+static const char *NT50 = "ACGTN";
+static const char *NT54 = "ACGTacgtN";
+static const char *NTB0 = "ACGTRYMKWSN";
+static const char *NTB4 = "ACGTRYMKWSNacgt";
+static const char *NTF0 = "ACGTRYMKWSBDHVN";
+static const char *NTF4 = "ACGTRYMKWSBDHVacgtN";
+static const char *NTFB = "ACGTRYMKWSBDHVacgtrymkwsN";
+static const char *NTFF = "ACGTRYMKWSBDHVacgtrymkwsbdhvN";
 
 void dmgen_free(dmgen dmg) {
-	free(dmg->alph);
 	free(dmg);
 }
 
-dmgen dmgen_new(int sig) {
-	return dmgen_new_custom(sig, 0.997, 0.498, 0.333, 0.8, 0.4, 0.3);
+dmgen dmgen_new(int aid) {
+	return dmgen_new_custom(aid, 0.997, 0.498, 0.333, 0.8, 0.4, 0.3);
 }
 
-dmgen dmgen_new_custom(int sig,
+dmgen dmgen_new_custom(int aid,
 		double P1, double P2, double P3,
 		double p1, double p2, double p3) {
 	dmgen dmg = malloc(sizeof(struct discrete_motif_generator));
-	dmg->sig = sig;
-	dmg->alph = malloc(sig+1);
-	switch (sig) {
-		case 4:  strcpy(dmg->alph, S4);  break;
-		case 5:  strcpy(dmg->alph, S5);  break;
-		case 9:  strcpy(dmg->alph, S9);  break;
-		case 11: strcpy(dmg->alph, S11); break;
-		case 15: strcpy(dmg->alph, S15); break;
-		case 19: strcpy(dmg->alph, S19); break;
-		case 25: strcpy(dmg->alph, S25); break;
-		case 29: strcpy(dmg->alph, S29); break;
-		default: gkn_exit("illegal sig: %d\n", sig);
+	dmg->aid = aid;
+	switch (aid) {
+		case 0: strcpy(dmg->alph, NT40); break;
+		case 1: strcpy(dmg->alph, NT50); break;
+		case 2: strcpy(dmg->alph, NT54); break;
+		case 3: strcpy(dmg->alph, NTB0); break;
+		case 4: strcpy(dmg->alph, NTB4); break;
+		case 5: strcpy(dmg->alph, NTF0); break;
+		case 6: strcpy(dmg->alph, NTF4); break;
+		case 7: strcpy(dmg->alph, NTFB); break;
+		case 8: strcpy(dmg->alph, NTFF); break;
+		default: gkn_exit("illegal alphabet: %d\n", aid);
 	}
 
 	dmg->P1 = gkn_p2s(P1);
@@ -65,10 +65,11 @@ dmgen dmgen_new_custom(int sig,
 char * num2str(dmgen dmg, int num, int len) {
 	char *str = malloc(len + 1);
 	char *src = dmg->alph;
+	int n = strlen(dmg->alph);
 
 	str[len] = '\0';
 	for (int i = 0; i < len; i++) {
-		int max = pow(dmg->sig, (len-i-1));
+		int max = pow(n, (len-i-1));
 		int r = 0;
 		if (num > max -1) {
 			r = num / max;
@@ -148,7 +149,22 @@ gkn_pwm num2pwm(dmgen dmg, int num, int len) {
 	return model;
 }
 
-double score_motif(const char *seq, gkn_pwm pwm, int mod) {
+static int motifs_found(const char *seq, gkn_pwm pwm) {
+	return 0;
+}
+
+double score_motif(gkn_vec seqs, gkn_pwm pwm, int mod) {
+	int swm = 0; // sequences with motifs
+	int tot = 0; // total motifs found
+	for (int i = 0; i < seqs->size; i++) {
+		gkn_fasta ff = seqs->elem[i];
+		int n = motifs_found(ff->seq, pwm); // probably needs threshold
+		if (n > 0) swm++;
+		tot += n;
+	}
+
+	// convert swm, tot to prob
+
 	return 3.14;
 }
 
@@ -171,7 +187,7 @@ gkn_pwm background_model(gkn_vec seqs, int len) {
 			}
 		}
 	}
-	
+
 	double ** pwm = malloc(sizeof(double*) * len);
 	for (int i = 0; i < len; i++) {
 		pwm[i] = malloc(sizeof(double) * 4);
@@ -182,14 +198,14 @@ gkn_pwm background_model(gkn_vec seqs, int len) {
 		pwm[i][2] = gkn_p2s((double)g/total);
 		pwm[i][3] = gkn_p2s((double)t/total);
 	}
-	
+
 	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
 	char *name = "background";
 	model->name = malloc(strlen(name)+1);
 	strcpy(model->name, name);
 	model->size = len;
 	model->score = pwm;
-	
+
 	return model;
 }
 
