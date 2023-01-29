@@ -149,23 +149,26 @@ gkn_pwm num2pwm(dmgen dmg, int num, int len) {
 	return model;
 }
 
-static int motifs_found(const char *seq, gkn_pwm pwm) {
-	return 0;
+static int count_motifs(const char *seq, gkn_pwm pwm, double t) {
+	int n = 0;
+	for (int i = 0; i < strlen(seq) - pwm->size + 1; i++) {
+		if (gkn_pwm_score(pwm, seq, i) > t) n++;
+	}
+	return n;
 }
 
 double score_motif(gkn_vec seqs, gkn_pwm pwm, int mod) {
 	int swm = 0; // sequences with motifs
 	int tot = 0; // total motifs found
 	for (int i = 0; i < seqs->size; i++) {
-		gkn_fasta ff = seqs->elem[i];
-		int n = motifs_found(ff->seq, pwm); // probably needs threshold
+		int n = count_motifs(seqs->elem[i], pwm, 5);
 		if (n > 0) swm++;
 		tot += n;
 	}
 
 	// convert swm, tot to prob
 
-	return 3.14;
+	return swm;
 }
 
 gkn_pwm background_model(gkn_vec seqs, int len) {
@@ -175,11 +178,11 @@ gkn_pwm background_model(gkn_vec seqs, int len) {
 	int t = 0;
 	int total = 0;
 	for (int i = 0; i < seqs->size; i++) {
-		gkn_fasta ff = seqs->elem[i];
-		int seqlen = strlen(ff->seq);
+		char *seq = seqs->elem[i];
+		int seqlen = strlen(seq);
 		total += seqlen;
 		for (int j = 0; j < seqlen; j++) {
-			switch (ff->seq[j]) {
+			switch (seq[j]) {
 				case 'A': a++; break;
 				case 'C': c++; break;
 				case 'G': g++; break;

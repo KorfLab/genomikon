@@ -76,10 +76,6 @@ alphabets:\n\
   7 ACGTRYMKWSBDHVacgtrymkwsN\n\
   8 ACGTRYMKWSBDHVacgtrymkwsbdhvN\n\
 models:\n\
-  0 ZOOPS - zero or one per sequence\n\
-  1 OOPS - only one per sequence\n\
-  2 ANR - any number of repetitions\n\
-  3 MSMC - most sequences multiple copies\n\
 ";
 
 int main(int argc, char **argv) {
@@ -130,7 +126,10 @@ int main(int argc, char **argv) {
 	gkn_vec seqs = gkn_vec_new();
 	gkn_pipe io = gkn_pipe_open(file, "r");
 	gkn_fasta ff;
-	while ((ff = gkn_fasta_read(io)) != NULL) gkn_vec_push(seqs, ff);
+	while ((ff = gkn_fasta_read(io)) != NULL) {
+		gkn_vec_push(seqs, ff->seq);
+		gkn_vec_push(seqs, gkn_revcomp(ff->seq));
+	}
 
 	// create background model
 	gkn_pwm bkgd = background_model(seqs, len);

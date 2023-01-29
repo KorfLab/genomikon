@@ -96,6 +96,8 @@ collection of sequences.
 + minimum complexity filter
 + minimum score filter
 - sequence black-listing?
+- reverse-complement motifs/search
+- motif comparison
 - research the various MEME model probabilities (and others)
 - determine proper threshold for scoring
 - figure out how to do multi-motif multi-sequence p-values
