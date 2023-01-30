@@ -33,6 +33,12 @@ dmgen dmgen_new_custom(int, double, double, double, double, double, double);
 char * num2str(dmgen, int, int);
 gkn_pwm num2pwm(dmgen, int, int);
 
+struct motif_score_result {
+	int seqs;
+	int seqs_found;
+	int motifs_found;
+};
+
 double score_motif(gkn_vec, gkn_pwm, int);
 gkn_pwm background_model(gkn_vec, int);
 

@@ -75,13 +75,13 @@ present and their individual values. Defaults are provided.
 
 Enumerating all possible combinations of discretized motifs may result in a
 vast number of PWMs. For example, when using the full alphabet of uppercase and
-lowercase letters, there are 500,246,412,961 motifs of length 6 (29^8). Many of
+lowercase letters, there are 500,246,412,961 motifs of length 8 (29^8). Many of
 these motifs, for example NNNNNNNN, are incapable of producing a motif with
-enough information content to be useful. Additionally, there are other motifs,
-such as AAAAAAAA, that have very low complexity, and may appear frequently
-because genomes have a lot of low entropy sequences. For these reasons, there
-are minimum score and minimum entropy filters to reduce the number of motifs
-that are analyzed.
+enough information content to be discriminative. Additionally, there are other
+motifs, such as AAAAAAAA, that have very low complexity, and may appear
+frequently because genomes have a lot of low entropy sequences. For these
+reasons, there are minimum score and minimum entropy filters to reduce the
+number of motifs that are analyzed.
 
 ## Probability Models ##
 
