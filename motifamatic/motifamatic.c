@@ -59,6 +59,7 @@ options:\n\
   --mod <int>    model id [4]\n\
   --mms <double> minimum motif score per position [1.0]\n\
   --mmh <double> minimum motif entropy [1.0]\n\
+  --neg <fasta>  file of negative sequences\n\
   --P1  <float>  uppercase single letter probability [0.997]\n\
   --P2  <float>  uppercase double letter probability [0.498]\n\
   --P3  <float>  uppercase triple letter probability [0.333]\n\
@@ -80,6 +81,7 @@ models:\n\
 
 int main(int argc, char **argv) {
 	char  *file = NULL;
+	char  *neg = NULL;
 	int    len = 6;
 	int    aid = 3;
 	int    mod = 0;
@@ -99,6 +101,7 @@ int main(int argc, char **argv) {
 	gkn_register_option("--mod", 1);
 	gkn_register_option("--mms", 1);
 	gkn_register_option("--mmh", 1);
+	gkn_register_option("--neg", 1);
 	gkn_register_option("--P1",  1);
 	gkn_register_option("--P2",  1);
 	gkn_register_option("--P3" , 1);
@@ -115,6 +118,7 @@ int main(int argc, char **argv) {
 	if (gkn_option("--mod")) mod = atoi(gkn_option("--mod"));
 	if (gkn_option("--mms")) mms = atof(gkn_option("--mms"));
 	if (gkn_option("--mmh")) mmh = atof(gkn_option("--mmh"));
+	if (gkn_option("--neg")) neg = gkn_option("--neg");
 	if (gkn_option("--P1"))  P1  = atof(gkn_option("--P1"));
 	if (gkn_option("--P2"))  P2  = atof(gkn_option("--P2"));
 	if (gkn_option("--P3"))  P3  = atof(gkn_option("--P3"));
@@ -129,6 +133,14 @@ int main(int argc, char **argv) {
 	while ((ff = gkn_fasta_read(io)) != NULL) {
 		gkn_vec_push(seqs, ff->seq);
 		gkn_vec_push(seqs, gkn_revcomp(ff->seq));
+	}
+	gkn_vec negs = gkn_vec_new();
+	if (neg) {
+		gkn_pipe nio = gkn_pipe_open(neg, "r");
+		while ((ff = gkn_fasta_read(nio)) != NULL) {
+			gkn_vec_push(negs, ff->seq);
+			gkn_vec_push(negs, gkn_revcomp(ff->seq));
+		}
 	}
 
 	// create background model

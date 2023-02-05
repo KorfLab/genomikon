@@ -1,8 +1,8 @@
 motifamatic
 ===========
 
-This `motifamatic` program finds motifs by enumerating all possible
-combinations of discretized position weight matrices.
+The `motifamatic` program finds motifs by enumerating all possible combinations
+of discretized position weight matrices.
 
 ## Discretized Position Weight Matrices ##
 
@@ -95,9 +95,9 @@ collection of sequences.
 
 + minimum complexity filter
 + minimum score filter
-- sequence black-listing?
-- reverse-complement motifs/search
-- motif comparison
++ negative sequence file
++ reverse-complement sequences
+- motif comparison w/ reverse complement
 - research the various MEME model probabilities (and others)
 - determine proper threshold for scoring
 - figure out how to do multi-motif multi-sequence p-values
