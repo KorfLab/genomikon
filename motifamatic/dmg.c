@@ -24,7 +24,7 @@ void dmgen_free(dmgen dmg) {
 }
 
 dmgen dmgen_new(int aid) {
-	return dmgen_new_custom(aid, 0.997, 0.498, 0.333, 0.8, 0.4, 0.3);
+	return dmgen_new_custom(aid, 0.97, 0.49, 0.33, 0.7, 0.4, 0.3);
 }
 
 dmgen dmgen_new_custom(int aid,

@@ -55,17 +55,17 @@ static char *usage = "\
 usage: motifamatic <fasta> [options]\n\
 options:\n\
   --len <int>    motif length [6]\n\
-  --aid <int>    alphabet id [4]\n\
-  --mod <int>    model id [4]\n\
+  --aid <int>    alphabet id [3]\n\
+  --mod <int>    model id [0]\n\
   --mms <double> minimum motif score per position [1.0]\n\
   --mmh <double> minimum motif entropy [1.0]\n\
   --neg <fasta>  file of negative sequences\n\
-  --P1  <float>  uppercase single letter probability [0.997]\n\
-  --P2  <float>  uppercase double letter probability [0.498]\n\
-  --P3  <float>  uppercase triple letter probability [0.333]\n\
-  --p1  <float>  lowercase single letter probability [0.800]\n\
-  --p2  <float>  lowercase double letter probability [0.400]\n\
-  --p2  <float>  lowercase double letter probability [0.300]\n\
+  --P1  <float>  uppercase single letter probability [0.97]\n\
+  --P2  <float>  uppercase double letter probability [0.49]\n\
+  --P3  <float>  uppercase triple letter probability [0.33]\n\
+  --p1  <float>  lowercase single letter probability [0.70]\n\
+  --p2  <float>  lowercase double letter probability [0.40]\n\
+  --p2  <float>  lowercase double letter probability [0.30]\n\
 alphabets:\n\
   0 ACGT\n\
   1 ACGTN\n\
@@ -87,12 +87,12 @@ int main(int argc, char **argv) {
 	int    mod = 0;
 	double mms = 1.0; // bits
 	double mmh = 1.0; // bits
-	double P1 = 0.997;
-	double P2 = 0.498;
-	double P3 = 0.333;
-	double p1 = 0.800;
-	double p2 = 0.400;
-	double p3 = 0.300;
+	double P1 = 0.97;
+	double P2 = 0.49;
+	double P3 = 0.33;
+	double p1 = 0.70;
+	double p2 = 0.40;
+	double p3 = 0.30;
 
 	// CLI - setup
 	gkn_set_program_name(argv[0]);
