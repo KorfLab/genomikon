@@ -9,10 +9,11 @@
 #include "genomikon.h"
 #include "dmg.h"
 
-// discrete nucleotide
+// discrete nucleotide stuff
+
 static double DNTP[128][4]; // probabilities
 static const char *DNTS = "ACGTRYMKWSBDHVNacgtrymkwsbdhvn"; // symbols
-static const char *DNTA[9] = {
+static const char *DNTA[9] = { // alphabets
 	"ACGT",
 	"ACGTN",
 	"ACGTacgtN",
@@ -93,7 +94,6 @@ char * get_alphabet(int n) {
 
 char * num2str(const char *alph, int num, int len) {
 	char *str = malloc(len + 1);
-	//char *src = alph;
 	int n = strlen(alph);
 
 	str[len] = '\0';
@@ -137,6 +137,9 @@ gkn_pwm num2pwm(const char *alph, int num, int len) {
 
 char * pwm2str(gkn_pwm pwm) {
 	char *s = malloc(pwm->size + 1);
+
+	// unfinished - need to search for closest str
+
 	return s;
 }
 
@@ -160,6 +163,23 @@ gkn_pwm str2pwm(const char *s, const char *name) {
 	return model;
 }
 
+// motif comparison
+
+/*
+
+manhattan, euclidean, kl distances
+
+sliding motif comparison
+
+gapped motif comparision?
+
+
+
+*/
+
+
+
+// motif-finding functions
 
 static int count_motifs(const char *seq, gkn_pwm pwm, double t) {
 	int n = 0;
