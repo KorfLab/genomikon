@@ -1,14 +1,13 @@
 use strict;
 use warnings;
 
-my $TF = "";
 my $sum = "cksum | cut -f1 -d ' '";
 
 my @TEST = (
 
 	{
-		name => "dmgtest",
-		cli  => "./dmgtest $TF 3 1 | $sum",
+		name => "default test",
+		cli  => "./testing 1 | $sum",
 		pass => "565792770",
 	},
 

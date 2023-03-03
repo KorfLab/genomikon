@@ -1,6 +1,7 @@
 
 #include "genomikon.h"
 #include "dmg.h"
+#include "pwm.h"
 
 struct max_motif {
 	double score;

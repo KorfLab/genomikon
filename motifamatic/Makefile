@@ -5,10 +5,10 @@ INC = -I..
 CC = gcc
 CFLAGS = -O2 -Wall -Werror
 
-OBJECTS = dmg.o
+OBJECTS = dmg.o pwm.o
 
-APP1 = dmgtest
-OBJ1 = dmgtest.o
+APP1 = testing
+OBJ1 = testing.o
 
 APP2 = motifamatic
 OBJ2 = motifamatic.o
