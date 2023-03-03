@@ -9,63 +9,92 @@
 #include "genomikon.h"
 #include "dmg.h"
 
-static const char *NT40 = "ACGT";
-static const char *NT50 = "ACGTN";
-static const char *NT54 = "ACGTacgtN";
-static const char *NTB0 = "ACGTRYMKWSN";
-static const char *NTB4 = "ACGTRYMKWSNacgt";
-static const char *NTF0 = "ACGTRYMKWSBDHVN";
-static const char *NTF4 = "ACGTRYMKWSBDHVacgtN";
-static const char *NTFB = "ACGTRYMKWSBDHVacgtrymkwsN";
-static const char *NTFF = "ACGTRYMKWSBDHVacgtrymkwsbdhvN";
+// discrete nucleotide
+static double DNTP[128][4]; // probabilities
+static const char *DNTS = "ACGTRYMKWSBDHVNacgtrymkwsbdhvn"; // symbols
+static const char *DNTA[9] = {
+	"ACGT",
+	"ACGTN",
+	"ACGTacgtN",
+	"ACGTRYMKWSN",
+	"ACGTRYMKWSNacgt",
+	"ACGTRYMKWSBDHVN",
+	"ACGTRYMKWSBDHVacgtN",
+	"ACGTRYMKWSBDHVacgtrymkwsN",
+	"ACGTRYMKWSBDHVacgtrymkwsbdhvN"
+};
 
-void dmgen_free(dmgen dmg) {
-	free(dmg);
+void init_DNTP(void) {
+	set_DNTP(0.97, 0.49, 0.33, 0.70, 0.40, 0.30);
 }
 
-dmgen dmgen_new(int aid) {
-	return dmgen_new_custom(aid, 0.97, 0.49, 0.33, 0.7, 0.4, 0.3);
-}
+void set_DNTP(double P1, double P2, double P3, double p1, double p2, double p3) {
+	double Q1 = (1 - P1) / 3;
+	double Q2 = (1 - 2 * P2) / 2;
+	double Q3 = (1 - 3 * P3) / 3;
+	double q1 = (1 - p1) / 3;
+	double q2 = (1 - 2 * p2) / 2;
+	double q3 = (1 - 3 * p3) / 3;
+	double N4 = 0.25;
+	double n4 = 0.25;
 
-dmgen dmgen_new_custom(int aid,
-		double P1, double P2, double P3,
-		double p1, double p2, double p3) {
-	dmgen dmg = malloc(sizeof(struct discrete_motif_generator));
-	dmg->aid = aid;
-	switch (aid) {
-		case 0: strcpy(dmg->alph, NT40); break;
-		case 1: strcpy(dmg->alph, NT50); break;
-		case 2: strcpy(dmg->alph, NT54); break;
-		case 3: strcpy(dmg->alph, NTB0); break;
-		case 4: strcpy(dmg->alph, NTB4); break;
-		case 5: strcpy(dmg->alph, NTF0); break;
-		case 6: strcpy(dmg->alph, NTF4); break;
-		case 7: strcpy(dmg->alph, NTFB); break;
-		case 8: strcpy(dmg->alph, NTFF); break;
-		default: gkn_exit("illegal alphabet: %d\n", aid);
+	for (int i = 0; i < 128; i++) {
+		for (int j = 0; j < 4; j++) {
+			DNTP[i][j] = -1;
+		}
 	}
 
-	dmg->P1 = gkn_p2s(P1);
-	dmg->P2 = gkn_p2s(P2);
-	dmg->P3 = gkn_p2s(P3);
-	dmg->p1 = gkn_p2s(p1);
-	dmg->p2 = gkn_p2s(p2);
-	dmg->p3 = gkn_p2s(p3);
-	dmg->Q1 = gkn_p2s((1 - P1) / 3);
-	dmg->Q2 = gkn_p2s((1 - 2 * P2) / 2);
-	dmg->Q3 = gkn_p2s((1 - 3 * P3) / 3);
-	dmg->q1 = gkn_p2s((1 - p1) / 3);
-	dmg->q2 = gkn_p2s((1 - 2 * p2) / 2);
-	dmg->q3 = gkn_p2s((1 - 3 * p3) / 3);
-	dmg->N4 =gkn_p2s(0.25);
+	double prob[30][4] = {
+		{P1, Q1, Q1, Q1}, // A
+		{Q1, P1, Q1, Q1}, // C
+		{Q1, Q1, P1, Q1}, // G
+		{Q1, Q1, Q1, P1}, // T
+		{P2, Q2, P2, Q2}, // R
+		{Q2, P2, Q2, P2}, // Y
+		{P2, P2, Q2, Q2}, // M
+		{Q2, Q2, P2, P2}, // K
+		{P2, Q2, Q2, P2}, // W
+		{Q2, P2, P2, Q2}, // S
+		{Q3, P3, P3, P3}, // B
+		{P3, Q3, P3, P3}, // D
+		{P3, P3, Q3, P3}, // H
+		{P3, P3, P3, Q3}, // V
+		{N4, N4, N4, N4}, // N
+		{p1, q1, q1, q1}, // a
+		{q1, p1, q1, q1}, // c
+		{q1, q1, p1, q1}, // g
+		{q1, q1, q1, p1}, // t
+		{p2, q2, p2, q2}, // r
+		{q2, p2, q2, p2}, // y
+		{p2, p2, q2, q2}, // m
+		{q2, q2, p2, p2}, // k
+		{p2, q2, q2, p2}, // w
+		{q2, p2, p2, q2}, // s
+		{q3, p3, p3, p3}, // b
+		{p3, q3, p3, p3}, // d
+		{p3, p3, q3, p3}, // h
+		{p3, p3, p3, q3}, // v
+		{n4, n4, n4, n4}  // n
+	};
 
-	return dmg;
+	for (int i = 0; i < 30; i++) {
+		for (int j = 0; j < 4; j++) {
+			DNTP[(int)DNTS[i]][j] = prob[i][j];
+		}
+	}
 }
 
-char * num2str(dmgen dmg, int num, int len) {
+char * get_alphabet(int n) {
+	assert(n >= 0 && n <= 8);
+	char *str = malloc(strlen(DNTA[n]) + 1);
+	strcpy(str, DNTA[n]);
+	return str;
+}
+
+char * num2str(const char *alph, int num, int len) {
 	char *str = malloc(len + 1);
-	char *src = dmg->alph;
-	int n = strlen(dmg->alph);
+	//char *src = alph;
+	int n = strlen(alph);
 
 	str[len] = '\0';
 	for (int i = 0; i < len; i++) {
@@ -75,70 +104,27 @@ char * num2str(dmgen dmg, int num, int len) {
 			r = num / max;
 			num -= r * max;
 		}
-		str[i] = src[r];
+		str[i] = alph[r];
 	}
 	return str;
 }
 
-gkn_pwm num2pwm(dmgen dmg, int num, int len) {
+gkn_pwm num2pwm(const char *alph, int num, int len) {
 	double ** pwm = malloc(sizeof(double*) * len);
 	for (int i = 0; i < len; i++) {
 		pwm[i] = malloc(sizeof(double) * 4);
 	}
-	double P1 = dmg->P1;
-	double P2 = dmg->P2;
-	double P3 = dmg->P3;
-	double p1 = dmg->p1;
-	double p2 = dmg->p2;
-	double p3 = dmg->p3;
-	double Q1 = dmg->Q1;
-	double Q2 = dmg->Q2;
-	double Q3 = dmg->Q3;
-	double q1 = dmg->q1;
-	double q2 = dmg->q2;
-	double q3 = dmg->q3;
-	double N4 = dmg->N4;
 
-	char *str = num2str(dmg, num, len);
+	char *str = num2str(alph, num, len);
 	for (int i = 0; i < len; i++) {
-		switch (str[i]) {
-		//                  A             C             G             T
-		case 'A': pwm[i][0]=P1; pwm[i][1]=Q1; pwm[i][2]=Q1; pwm[i][3]=Q1; break;
-		case 'C': pwm[i][0]=Q1; pwm[i][1]=P1; pwm[i][2]=Q1; pwm[i][3]=Q1; break;
-		case 'G': pwm[i][0]=Q1; pwm[i][1]=Q1; pwm[i][2]=P1; pwm[i][3]=Q1; break;
-		case 'T': pwm[i][0]=Q1; pwm[i][1]=Q1; pwm[i][2]=Q1; pwm[i][3]=P1; break;
-		case 'R': pwm[i][0]=P2; pwm[i][1]=Q2; pwm[i][2]=P2; pwm[i][3]=Q2; break;
-		case 'Y': pwm[i][0]=Q2; pwm[i][1]=P2; pwm[i][2]=Q2; pwm[i][3]=P2; break;
-		case 'M': pwm[i][0]=P2; pwm[i][1]=P2; pwm[i][2]=Q2; pwm[i][3]=Q2; break;
-		case 'K': pwm[i][0]=Q2; pwm[i][1]=Q2; pwm[i][2]=P2; pwm[i][3]=P2; break;
-		case 'W': pwm[i][0]=P2; pwm[i][1]=Q2; pwm[i][2]=Q2; pwm[i][3]=P2; break;
-		case 'S': pwm[i][0]=Q2; pwm[i][1]=P2; pwm[i][2]=P2; pwm[i][3]=Q2; break;
-		case 'B': pwm[i][0]=Q3; pwm[i][1]=P3; pwm[i][2]=P3; pwm[i][3]=P3; break;
-		case 'D': pwm[i][0]=P3; pwm[i][1]=Q3; pwm[i][2]=P3; pwm[i][3]=P3; break;
-		case 'H': pwm[i][0]=P3; pwm[i][1]=P3; pwm[i][2]=Q3; pwm[i][3]=P3; break;
-		case 'V': pwm[i][0]=P3; pwm[i][1]=P3; pwm[i][2]=P3; pwm[i][3]=Q3; break;
-		case 'a': pwm[i][0]=p1; pwm[i][1]=q1; pwm[i][2]=q1; pwm[i][3]=q1; break;
-		case 'c': pwm[i][0]=q1; pwm[i][1]=p1; pwm[i][2]=q1; pwm[i][3]=q1; break;
-		case 'g': pwm[i][0]=q1; pwm[i][1]=q1; pwm[i][2]=p1; pwm[i][3]=q1; break;
-		case 't': pwm[i][0]=q1; pwm[i][1]=q1; pwm[i][2]=q1; pwm[i][3]=p1; break;
-		case 'r': pwm[i][0]=p2; pwm[i][1]=q2; pwm[i][2]=p2; pwm[i][3]=q2; break;
-		case 'y': pwm[i][0]=q2; pwm[i][1]=p2; pwm[i][2]=q2; pwm[i][3]=p2; break;
-		case 'm': pwm[i][0]=p2; pwm[i][1]=p2; pwm[i][2]=q2; pwm[i][3]=q2; break;
-		case 'k': pwm[i][0]=q2; pwm[i][1]=q2; pwm[i][2]=p2; pwm[i][3]=p2; break;
-		case 'w': pwm[i][0]=p2; pwm[i][1]=q2; pwm[i][2]=q2; pwm[i][3]=p2; break;
-		case 's': pwm[i][0]=q2; pwm[i][1]=p2; pwm[i][2]=p2; pwm[i][3]=q2; break;
-		case 'b': pwm[i][0]=q3; pwm[i][1]=p3; pwm[i][2]=p3; pwm[i][3]=p3; break;
-		case 'd': pwm[i][0]=p3; pwm[i][1]=q3; pwm[i][2]=p3; pwm[i][3]=p3; break;
-		case 'h': pwm[i][0]=p3; pwm[i][1]=p3; pwm[i][2]=q3; pwm[i][3]=p3; break;
-		case 'v': pwm[i][0]=p3; pwm[i][1]=p3; pwm[i][2]=p3; pwm[i][3]=q3; break;
-		case 'N': pwm[i][0]=N4; pwm[i][1]=N4; pwm[i][2]=N4; pwm[i][3]=N4; break;
-		default: gkn_exit("impossible");
+		for (int j = 0; j < 4; j++) {
+			pwm[i][j] = gkn_p2s(DNTP[(int)str[i]][j]);
 		}
 	}
 
 	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
 	char name[64];
-	sprintf(name, "%s-%d-%s", dmg->alph, num, str);
+	sprintf(name, "%s-%d-%s", alph, num, str);
 	model->name = malloc(strlen(name)+1);
 	strcpy(model->name, name);
 	model->size = len;
@@ -148,6 +134,32 @@ gkn_pwm num2pwm(dmgen dmg, int num, int len) {
 
 	return model;
 }
+
+char * pwm2str(gkn_pwm pwm) {
+	char *s = malloc(pwm->size + 1);
+	return s;
+}
+
+
+gkn_pwm str2pwm(const char *s, const char *name) {
+	int len = strlen(s);
+
+	double ** pwm = malloc(sizeof(double*) * len);
+	for (int i = 0; i < len; i++) {
+		pwm[i] = malloc(sizeof(double) * 4);
+	}
+
+	// unfinished - need the actual values
+
+	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
+	model->name = malloc(strlen(name)+1);
+	strcpy(model->name, name);
+	model->size = len;
+	model->score = pwm;
+
+	return model;
+}
+
 
 static int count_motifs(const char *seq, gkn_pwm pwm, double t) {
 	int n = 0;

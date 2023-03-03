@@ -151,11 +151,14 @@ int main(int argc, char **argv) {
 	mms *= log(2.718281828);
 	mmh *= log(2.718281828);
 
+	// initialize discretized alphabet and probabilities
+	set_DNTP(P1, P2, P3, p1, p2, p3);
+	char *alph = get_alphabet(aid);
+
 	// scoring loop
-	dmgen dmg = dmgen_new_custom(aid, P1, P2, P3, p1, p2, p3);
-	int limit = pow(strlen(dmg->alph), len);
+	int limit = pow(strlen(alph), len);
 	for (int n = 0; n < limit; n++) {
-		gkn_pwm motif = num2pwm(dmg, n, len);
+		gkn_pwm motif = num2pwm(alph, n, len);
 		struct max_motif max = maximum_motif(motif, bkgd);
 		if (max.score > mms * len && max.entropy > mmh) {
 			double s = score_motif(seqs, motif, mod);
