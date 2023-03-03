@@ -149,7 +149,11 @@ gkn_pwm str2pwm(const char *s, const char *name) {
 		pwm[i] = malloc(sizeof(double) * 4);
 	}
 
-	// unfinished - need the actual values
+	for (int i = 0; i < strlen(s); i++) {
+		for (int j = 0; j < 4; j++) {
+			pwm[i][j] = gkn_p2s(DNTP[(int)s[i]][j]);
+		}
+	}
 
 	gkn_pwm model = malloc(sizeof(struct gkn_PWM));
 	model->name = malloc(strlen(name)+1);
