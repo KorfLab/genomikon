@@ -222,7 +222,7 @@ isozone isoforms(
 				if (count_only) continue;
 
 				// save isoform
-				gkn_mRNA tx = build_mRNA(seq, gen, len - gen, dsites, asites);
+				gkn_mRNA tx = build_mRNA(seq, gen, len - gen-1, dsites, asites);
 				gkn_vec_push(txs, tx);
 			}
 		}
