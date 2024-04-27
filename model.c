@@ -11,17 +11,17 @@
 double gkn_p2s(double p) {
 	assert(p >= 0 && p <= 1);
 	if (p == 0) return -100; // umm...
-	return log(p/0.25);
+	return log2(p/0.25);
 }
 
 double gkn_s2p(double s) {
 	if (s < -100) return 0.0;
-	return 0.25 * pow(2.7182818, s);
+	return 0.25 * pow(2, s);
 }
 
 double gkn_sum2(double a, double b) {
 	if (fabs(a - b) > 20) return (a > b) ? a : b;
-	return (log(1 + pow(2.7182818, b-a)) + a);
+	return (log(1 + pow(2, b-a)) + a);
 }
 
 // PWM
