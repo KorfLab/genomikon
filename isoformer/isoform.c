@@ -192,7 +192,7 @@ isozone isoforms(
 	gkn_ivec accs = gkn_ivec_new();
 
 	if   (gff) gff_sites(gff, dons, accs, seq, 1); // canonical only for now
-	else       gtag_sites(seq, gen +emin, len -gen -emin, dons, accs);
+	else       gtag_sites(seq, gen + emin, len -gen -emin -2, dons, accs);
 
 	int nsites = dons->size < accs->size ? dons->size : accs->size;
 	if (nsites > smax) nsites = smax;
@@ -217,7 +217,7 @@ isozone isoforms(
 				trials++;
 				if (short_intron(dsites, asites, imin)) continue;
 				if (short_exon(dsites, asites, len, gen, emin)) continue;
-				
+
 				forms++;
 				if (count_only) continue;
 
@@ -238,7 +238,7 @@ isozone isoforms(
 			gkn_ivec_free(v);
 		}
 		gkn_vec_free(acombos);
-		
+
 	}
 
 	// return values
