@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 
-my $TS = "data/ch.9940.fa";
-my $TG = "data/ch.9940.gff3";
+my $TS = "data/ch.10010.fa";
+my $TG = "data/ch.10010.gff3";
 my $sum = "cksum | cut -f1 -d ' '";
 
 my @TEST = (
@@ -10,37 +10,37 @@ my @TEST = (
 	{
 		name => "isoformer vanilla",
 		cli  => "./isoformer $TS | $sum",
-		pass => "3597393693",
+		pass => "2442921492",
 	},
 
 	{
 		name => "isoformer w/ all models",
-		cli  => "./isoformer $TS --dpwm data/donor.pwm --apwm data/acceptor.pwm --emm data/exon.mm --imm data/intron.mm --elen data/exon.len --ilen data/intron.len | $sum",
-		pass => "2301551904",
+		cli  => "./isoformer $TS --dpwm data/don.pwm --apwm data/acc.pwm --emm data/exon.mm --imm data/intron.mm --elen data/exon.len --ilen data/intron.len | $sum",
+		pass => "2196911805",
 	},
 
 	{
 		name => "isoformer gff introns",
 		cli  => "./isoformer $TS --introns $TG | $sum",
-		pass => "3459895910",
+		pass => "3336679489",
 	},
 
 	{
 		name => "isoformer +gff +models",
 		cli  => "./isoformer $TS --introns $TG --dpwm data/donor.pwm --apwm data/acceptor.pwm --emm data/exon.mm --imm data/intron.mm --elen data/exon.len --ilen data/intron.len | $sum",
-		pass => "1608473097",
+		pass => "2321678176",
 	},
 
 	{
 		name => "isocounter",
 		cli  => "./isocounter $TS | $sum",
-		pass => "2518916367",
+		pass => "1826210924",
 	},
 
 	{
 		name => "isocounter +gff",
 		cli  => "./isocounter $TS --introns $TG | $sum",
-		pass => "3088433971",
+		pass => "1287712275",
 	},
 
 );
