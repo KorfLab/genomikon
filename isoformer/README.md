@@ -54,12 +54,26 @@ score them, use `isocounter`. The `isorandom` program runs an experiment where
 it generates random sequences and outputs the number of isoforms. It's like
 running `isocounter` in a loop with randomly generated sequences.
 
-The output of `isorandom` is 5 columns:
+The output of `isorandom` is 4 columns:
 1. sequence length
 2. splice donor sites
 3. splice acceptor sites
-4. trials: total number of isoforms, including illegal onesn
-5. isoforms: number of legal isoforms
+4. isoforms: number of legal isoforms
 
+There is also a final line that reports the elapsed time.
+
+```
+1000	52	48	7683379
+1000	53	52	7026844
+1000	51	43	3702188
+1000	43	45	2130463
+1000	46	41	1220223
+1000	53	43	2347596
+1000	46	64	11927420
+1000	48	49	5898039
+1000	43	41	1503713
+1000	50	48	4186241
+# Elapsed time: 11.163539
+```
 
 

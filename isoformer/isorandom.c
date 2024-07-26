@@ -61,8 +61,8 @@ int main(int argc, char **argv) {
 	for (int i = 0; i < count; i++) {
 		char *seq = random_seq(length);
 		isozone iso = isoforms(seq, emin, imin, smax, gen, NULL, 1);
-		printf("%d\t%d\t%d\t%d\t%d\n", (int)strlen(seq), iso->dons, iso->accs,
-			iso->trials, iso->isoforms);
+		printf("%d\t%d\t%d\t%d\n", (int)strlen(seq), iso->dons, iso->accs,
+			iso->isoforms);
 		isozone_free(iso);
 		free(seq);
 	}
