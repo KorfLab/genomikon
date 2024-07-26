@@ -1,3 +1,4 @@
+#include <time.h>
 #include "genomikon.h"
 #include "isoform.h"
 
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
 	gkn_register_option("--min_intron", 1);
 	gkn_register_option("--max_splice", 1);
 	gkn_register_option("--flank",  1);
+	gkn_register_option("--seed", 1);
 	gkn_parse_options(&argc, argv);
 	if (argc == 1) gkn_exit("%s", usage);
 
@@ -51,6 +53,7 @@ int main(int argc, char **argv) {
 	if (gkn_option("--max_splice")) smax  = atoi(gkn_option("--max_splice"));
 	if (gkn_option("--flank"))      gen   = atoi(gkn_option("--flank"));
 	if (gkn_option("--seed"))       srand(atoi(gkn_option("--seed")));
+	else                            srand(time(NULL));
 
 	// main loop
 	for (int i = 0; i < count; i++) {

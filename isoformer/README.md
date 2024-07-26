@@ -53,3 +53,13 @@ If you only want to count the number of isoforms and not actually generate or
 score them, use `isocounter`. The `isorandom` program runs an experiment where
 it generates random sequences and outputs the number of isoforms. It's like
 running `isocounter` in a loop with randomly generated sequences.
+
+The output of `isorandom` is 5 columns:
+1. sequence length
+2. splice donor sites
+3. splice acceptor sites
+4. trials: total number of isoforms, including illegal onesn
+5. isoforms: number of legal isoforms
+
+
+
