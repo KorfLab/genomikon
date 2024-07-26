@@ -56,6 +56,8 @@ int main(int argc, char **argv) {
 	else                            srand(time(NULL));
 
 	// main loop
+	struct timespec t0, t1;
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t0);
 	for (int i = 0; i < count; i++) {
 		char *seq = random_seq(length);
 		isozone iso = isoforms(seq, emin, imin, smax, gen, NULL, 1);
@@ -64,6 +66,10 @@ int main(int argc, char **argv) {
 		isozone_free(iso);
 		free(seq);
 	}
-
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &t1);
+	int secs = t1.tv_sec - t0.tv_sec;
+	int nanos = t1.tv_nsec - t0.tv_nsec;
+	if (nanos < 0) secs++;
+	printf("# Elapsed time: %f\n", (float)(secs + nanos/1e9));
 	return 0;
 }
